@@ -53,7 +53,7 @@ def manager_login(request):
 def manager_index(request):
     if request.session.get('is_login_manager',None):
 #        request.session.clear()
-        return render(request, 'manage.html')
+        return render(request, 'manage/manage_base.html')
     else:
         return redirect(reverse('manager_login'))
 
