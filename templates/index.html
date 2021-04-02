@@ -1,0 +1,58 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>图片</title>
+    <link href="{% static 'CSS/hello.css' %}" type="text/css" rel="stylesheet"/>
+    <script src="{% static 'JS/openseadragon.min.js' %}"></script>
+    <script src="{% static 'JS/jquery-3.5.1.min.js' %}"></script> 
+    <script src="{% static 'JS/img.manage.js' %}" type="text/javascript" defer=true></script>
+</head>
+<script>var static_root = "{% static '' %}"</script>
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <table>
+            <tr id = "imgtable" >
+                <td><div id = "img1"></div></td>
+                <td id = "space"></td>
+                <td><div id = "img2"></div></td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+    </div>
+    <div class="cover" id="cover_left"></div>
+    <div class="cover" id="cover_right"></div>
+    <button class="check" id = "check_left" onclick="ck_left();"></button>
+    <button class="check" id = "check_right" onclick="ck_right();"></button>
+    <div id = "next"><button onclick="test();"></button></div>
+    <div id = "last"><button onclick="test1();"></button></div>
+
+    <div class="box">
+        <div class="box1">
+            <p>这是一个图片评价网站</p>
+            <button onclick="jQuery('.box').hide()">确认</button>
+        </div>
+    </div>
+    <button id = "tips" onclick="jQuery('.box').show()"></button>
+    <button id = "ok" onclick="submit()"></button>
+</body>
+
+<script type="text/javascript">
+    var csrftoken = $.cookie('csrftoken');
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+</script>
+
+</html>
