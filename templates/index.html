@@ -34,25 +34,17 @@
     <div class="box">
         <div class="box1">
             <p>这是一个图片评价网站</p>
+            <ul>
+                <li>您可在网页中浏览开发者用不同手机收集得到的同一场景图片，并在两张图片中选择出其中您认为较好的一张图片</li>
+                <li>评价的标准包括但不限于：照片的分辨率，色调真实度，照片是否让您感到舒适</li>
+                <li>您可以选择在任意时刻点击右上角对勾图标结束测评</li>
+                <li>tips：您可以用鼠标滚轮进行放大与缩小、鼠标拖动进行多方向移动、图片左上角的图标复原图片大小，若您需要细致观察图片，将会用到这些操作</li>
+            </ul>
             <button onclick="jQuery('.box').hide()">确认</button>
         </div>
     </div>
     <button id = "tips" onclick="jQuery('.box').show()"></button>
     <button id = "ok" onclick="submit()"></button>
 </body>
-
-<script type="text/javascript">
-    var csrftoken = $.cookie('csrftoken');
-        function csrfSafeMethod(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-</script>
 
 </html>

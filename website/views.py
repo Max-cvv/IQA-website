@@ -52,10 +52,22 @@ def manager_login(request):
 
 def manager_index(request):
     if request.session.get('is_login_manager',None):
-#        request.session.clear()
-        return render(request, 'manage/manage_base.html')
+#        request.session.clear()    
+        user_find = Users.objects.all()
+        return render(request, 'manage/manage_base.html', {'users_list':user_find})
     else:
         return redirect(reverse('manager_login'))
+
+def user_reset(request, user_id):
+    user_find = Users.objects.get(id = user_id)
+    user_find.screen_width = None
+    user_find.screen_height = None
+    user_find.window_width = None
+    user_find.window_height = None
+    user_find.login_time = None
+    user_find.submit_time = None
+    user_find.save()
+    return redirect(reverse('manager_index'))
 
 
 def index(request):

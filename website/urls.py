@@ -6,6 +6,8 @@ urlpatterns = [
     path('index/', views.index, name = 'index'),
     path('manage/', views.manager_login, name = 'manager_login'),
     path('manage_site/', views.manager_index, name = 'manager_index'),
+    path('reset/<user_id>/', views.user_reset),
+
     path('record/',  views.record, name = 'record'),
     path('submit/', views.submit, name = 'submit'),
     path('get_next/', views.get_next, name = 'get_next'),
