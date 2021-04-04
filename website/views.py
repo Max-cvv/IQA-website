@@ -44,19 +44,39 @@ def manager_login(request):
             #request.session.set_expiry(10)  #session认证时间为10s，10s之后session认证失效
             #request.session['username']=user   #user的值发送给session里的username
             request.session['is_login_manager']=True   #认证为真
-            return redirect(reverse('manager_index'))
+            return redirect(reverse('manager_users_list'))
         else:
             context = {'script':"alert", 'wrong':'用户名或密码错误！！'}
             return render(request,'manager_login.html', context)
     return render(request,'manager_login.html')
 
-def manager_index(request):
+def manager_users_list(request):
     if request.session.get('is_login_manager',None):
 #        request.session.clear()    
         user_find = Users.objects.all()
-        return render(request, 'manage/manage_base.html', {'users_list':user_find})
+        return render(request, 'manage/manage_users_list.html', {'users_list':user_find})
     else:
         return redirect(reverse('manager_login'))
+
+def manager_records_list(request):
+    if request.session.get('is_login_manager',None):
+#        request.session.clear()    
+        record_find = Records.objects.all().order_by("user_id")
+        record_img = []
+        for record in record_find:
+            record.op_time = float(record.op_time)/1000
+            D1 = int(record.img1/10000)
+            D2 = int(record.img2/10000)
+            CO1 = int((record.img1-D1*10000)/1000)
+            CO2 = int((record.img2-D2*10000)/1000)
+            img1 = record.img1 % 1000
+            img2 = record.img2 % 1000
+            dic = {'D1':D1, 'D2':D2, 'CO1':CO1, 'CO2':CO2, 'img1':img1, 'img2':img2}
+            record_img.append(dic)
+        return render(request, 'manage/manage_records_list.html', {'records_list':zip(record_find,record_img)})
+    else:
+        return redirect(reverse('manager_login'))
+
 
 def user_reset(request, user_id):
     user_find = Users.objects.get(id = user_id)
@@ -67,8 +87,34 @@ def user_reset(request, user_id):
     user_find.login_time = None
     user_find.submit_time = None
     user_find.save()
-    return redirect(reverse('manager_index'))
+    return redirect(reverse('manager_users_list'))
 
+def user_delete(request, user_id):
+    user_find = Users.objects.get(id = user_id)
+    user_find.delete()
+    return redirect(reverse('manager_users_list'))
+
+
+def user_add(request):
+    users = Users.objects.all().order_by("id")
+    i = 1
+    for user_num in users:
+        if i != user_num.id:
+            break
+        i += 1
+    user = Users(id = i, name = request.GET.get('name'), check_list = request.GET.get('check'))
+    user.save()
+
+    return redirect(reverse('manager_users_list'))
+
+def record_delete(request, record_id):
+    record_find = Records.objects.get(id = record_id)
+    record_find.delete()
+    return redirect(reverse('manager_records_list'))
+
+def manage_logout(request):
+    request.session.clear()
+    return redirect(reverse('manager_login'))
 
 def index(request):
     if request.session.get('is_login',None):

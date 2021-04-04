@@ -7,13 +7,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-   
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
     <script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
 
     {% block external_header %}{% endblock %}
 </head>
 <body>
-    {% block body %}{% endblock %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">管理后台</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/manage_logout/">注销</a></li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    
+    
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+              <li id = "manage_1" ><a href="/manage/1/">用户列表</a></li>
+              <li id = "manage_2" ><a href="/manage/2/">操作记录</a></li>
+            </ul>
+          </div>
+            {% block body %}{% endblock %}
+        </div>
+    </div>
 </body>
 {% block external_js %}{% endblock %}
 </html>

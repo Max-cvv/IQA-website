@@ -1,0 +1,70 @@
+{% extends 'manage/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}管理后台{% endblock %}
+{% block external_header %}
+
+{% endblock %}
+{% block body %}
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+       
+        <h1 class="page-header">用户列表</h1>
+
+        <form class="form-inline" method = "GET" action = "/adduser/">
+          <div class="form-group">
+            <input type="text" class="form-control" name="name" placeholder="姓名">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="check" placeholder="验证码">
+          </div>
+          <button type="submit" class="btn btn-primary">增加用户</button>
+        </form>
+       
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>姓名</th>
+                <th>邀请码</th>
+                <th>屏幕分辨率</th>
+                <th>窗口大小</th>
+                <th>登录时间</th>
+                <th>提交时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for user in users_list %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.check_list }}</td>
+                <td>{{ user.screen_width}}×{{ user.screen_height}}</td>
+                <td>{{ user.window_width}}×{{ user.window_height}}</td>
+                <td>{{ user.login_time }}</td>
+                <td>{{ user.submit_time }}</td>
+                <td>
+                  <a href="/reset/{{ user.id }}/" class="btn-sm btn-warning" role="button">重置</a>
+                  <a href="/delete/{{ user.id }}/" class="btn-sm btn-danger" role="button">删除</a>
+                </td>
+              </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        
+
+      </div>
+
+
+
+
+{% endblock %}
+
+{% block external_js %}
+<script>$("#manage_1").addClass("active")</script>
+{% endblock %}

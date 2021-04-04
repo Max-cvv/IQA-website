@@ -1,0 +1,57 @@
+{% extends 'manage/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}管理后台{% endblock %}
+{% block external_header %}
+
+{% endblock %}
+{% block body %}
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">操作记录</h1>
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>用户id</th>
+                <th>图片1</th>
+                <th>图片2</th>
+                <th>选择结果</th>
+                <th>拖动操作</th>
+                <th>放缩操作</th>
+                <th>操作时间/秒</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for record,record_ in records_list %}
+              <tr>
+                <td>{{ record.user_id }}</td>
+                <td>D{{ record_.D1 }}-CO{{ record_.CO1 }}-{{ record_.img1 }}</td>
+                <td>D{{ record_.D2 }}-CO{{ record_.CO2 }}-{{ record_.img2 }}</td>
+                {% if record.result == 0 %}
+                <td>图片1</td>
+                {% else %}
+                <td>图片2</td>
+                {% endif %}
+                <td>{{ record.operation}}</td>
+                <td>{{ record.operation_scroll }}</td>
+                <td>{{ record.op_time }}</td>
+                <td><a href="/record_delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
+              </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
+
+{% endblock %}
+
+{% block external_js %}
+<script>$("#manage_2").addClass("active")</script>
+{% endblock %}

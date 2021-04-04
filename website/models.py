@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Users(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, blank=True,null=True)
     check_list = models.CharField(max_length=30, blank=True,null=True)
     screen_width = models.IntegerField(blank=True,null=True)
     screen_height = models.IntegerField(blank=True,null=True)
