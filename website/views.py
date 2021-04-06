@@ -7,6 +7,8 @@ import datetime
 import random
 
 # Create your views here.
+
+#用户端
 def log_in(request):
 
     if request.method=='GET':
@@ -32,8 +34,50 @@ def log_in(request):
             return render(request,'login.html', context)
     return render(request,'login.html')
 
-def manager_login(request):
+def index(request):
+    if request.session.get('is_login',None):
+#        request.session.clear()
+        return render(request, 'index.html')
+    else:
+        return redirect(reverse('login'))
 
+@csrf_exempt
+def record(request):
+    if request.method=='POST':
+        record = Records(user_id=request.session['userID'],img1=request.POST.get('img1'),img2=request.POST.get('img2'),\
+            result = request.POST.get('result'),operation = request.POST.get('operation'), \
+            operation_scroll = request.POST.get('operation_scroll'), op_time = request.POST.get('op_time'))
+        record.save()
+        return JsonResponse({'state':'ok'})
+    else:
+        return JsonResponse({'state':'fail'})
+
+
+@csrf_exempt
+def submit(request):
+    if request.method=='POST':
+        user = Users.objects.get(id=request.session['userID'])
+        user.submit_time=datetime.datetime.now()
+        user.screen_width = request.POST.get('screen_width')
+        user.screen_height = request.POST.get('screen_height')
+        user.window_width = request.POST.get('window_width')
+        user.window_height = request.POST.get('window_height')
+        user.screen_colorDepth = request.POST.get('screen_colorDepth')
+        user.save()
+        request.session.clear()
+        return JsonResponse({'state':'ok'})
+    return JsonResponse({'state':'fail'})
+
+@csrf_exempt
+def get_next(request):
+    if request.method=='POST':
+        return JsonResponse({'state':'ok', 'device1':1, 'device2':1, 'photo_num':random.randint(1,58)})
+    return JsonResponse({'state':'fail'})
+
+
+#管理端
+def manager_login(request):
+    
     if request.method=='GET':
         return render(request,'manager_login.html')
     elif request.method=="POST":
@@ -114,44 +158,10 @@ def record_delete(request, record_id):
 
 def manage_logout(request):
     request.session.clear()
-    return redirect(reverse('manager_login'))
-
-def index(request):
-    if request.session.get('is_login',None):
-#        request.session.clear()
-        return render(request, 'index.html')
-    else:
-        return redirect(reverse('login'))
-
-@csrf_exempt
-def record(request):
-    if request.method=='POST':
-        record = Records(user_id=request.session['userID'],img1=request.POST.get('img1'),img2=request.POST.get('img2'),\
-            result = request.POST.get('result'),operation = request.POST.get('operation'), \
-            operation_scroll = request.POST.get('operation_scroll'), op_time = request.POST.get('op_time'))
-        record.save()
-        return JsonResponse({'state':'ok'})
-    else:
-        return JsonResponse({'state':'fail'})
+    #request.session['is_login_manager']=True
+    if request.session.get('is_login_manager',None):
+        return redirect(reverse('manager_records_list'), permanent=True)
+    return redirect(reverse('manager_login'), permanent=True)
+    #return render(request,'manager_login.html')
 
 
-@csrf_exempt
-def submit(request):
-    if request.method=='POST':
-        user = Users.objects.get(id=request.session['userID'])
-        user.submit_time=datetime.datetime.now()
-        user.screen_width = request.POST.get('screen_width')
-        user.screen_height = request.POST.get('screen_height')
-        user.window_width = request.POST.get('window_width')
-        user.window_height = request.POST.get('window_height')
-        user.screen_colorDepth = request.POST.get('screen_colorDepth')
-        user.save()
-        request.session.clear()
-        return JsonResponse({'state':'ok'})
-    return JsonResponse({'state':'fail'})
-
-@csrf_exempt
-def get_next(request):
-    if request.method=='POST':
-        return JsonResponse({'state':'ok', 'device1':1, 'device2':1, 'photo_num':random.randint(1,58)})
-    return JsonResponse({'state':'fail'})
