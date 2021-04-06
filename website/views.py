@@ -161,8 +161,8 @@ def record_delete(request, record_id):
     record_find.delete()
     return redirect(reverse('manager_records_list'))
 
-@login_decorator()
+
 def manage_logout(request):
-    request.session.flush()
-    return redirect(reverse('manager_login'), permanent=True)
+    request.session.clear()
+    return redirect(reverse('manager_login'))
 
