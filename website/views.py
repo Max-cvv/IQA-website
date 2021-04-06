@@ -8,6 +8,18 @@ import random
 
 # Create your views here.
 
+#装饰器函数
+def login_decorator(session_item = 'is_login_manager', redirect_url = 'manager_login'):
+    def decorator(func):
+        def wrapper(request, *args, **kargs):
+            if request.session.get(session_item,None):
+                return func(request, *args, **kargs)
+            else:
+                return redirect(reverse(redirect_url))
+        return wrapper
+    return decorator
+
+
 #用户端
 def log_in(request):
 
@@ -34,12 +46,10 @@ def log_in(request):
             return render(request,'login.html', context)
     return render(request,'login.html')
 
+@login_decorator('is_login', 'login')
 def index(request):
-    if request.session.get('is_login',None):
-#        request.session.clear()
-        return render(request, 'index.html')
-    else:
-        return redirect(reverse('login'))
+    return render(request, 'index.html')
+
 
 @csrf_exempt
 def record(request):
@@ -77,7 +87,6 @@ def get_next(request):
 
 #管理端
 def manager_login(request):
-    
     if request.method=='GET':
         return render(request,'manager_login.html')
     elif request.method=="POST":
@@ -94,34 +103,29 @@ def manager_login(request):
             return render(request,'manager_login.html', context)
     return render(request,'manager_login.html')
 
+@login_decorator()
 def manager_users_list(request):
-    if request.session.get('is_login_manager',None):
-#        request.session.clear()    
-        user_find = Users.objects.all()
-        return render(request, 'manage/manage_users_list.html', {'users_list':user_find})
-    else:
-        return redirect(reverse('manager_login'))
+    user_find = Users.objects.all()
+    return render(request, 'manage/manage_users_list.html', {'users_list':user_find})
 
+
+@login_decorator()
 def manager_records_list(request):
-    if request.session.get('is_login_manager',None):
-#        request.session.clear()    
-        record_find = Records.objects.all().order_by("user_id")
-        record_img = []
-        for record in record_find:
-            record.op_time = float(record.op_time)/1000
-            D1 = int(record.img1/10000)
-            D2 = int(record.img2/10000)
-            CO1 = int((record.img1-D1*10000)/1000)
-            CO2 = int((record.img2-D2*10000)/1000)
-            img1 = record.img1 % 1000
-            img2 = record.img2 % 1000
-            dic = {'D1':D1, 'D2':D2, 'CO1':CO1, 'CO2':CO2, 'img1':img1, 'img2':img2}
-            record_img.append(dic)
-        return render(request, 'manage/manage_records_list.html', {'records_list':zip(record_find,record_img)})
-    else:
-        return redirect(reverse('manager_login'))
+    record_find = Records.objects.all().order_by("user_id")
+    record_img = []
+    for record in record_find:
+        record.op_time = float(record.op_time)/1000
+        D1 = int(record.img1/10000)
+        D2 = int(record.img2/10000)
+        CO1 = int((record.img1-D1*10000)/1000)
+        CO2 = int((record.img2-D2*10000)/1000)
+        img1 = record.img1 % 1000
+        img2 = record.img2 % 1000
+        dic = {'D1':D1, 'D2':D2, 'CO1':CO1, 'CO2':CO2, 'img1':img1, 'img2':img2}
+        record_img.append(dic)
+    return render(request, 'manage/manage_records_list.html', {'records_list':zip(record_find,record_img)})
 
-
+@login_decorator()
 def user_reset(request, user_id):
     user_find = Users.objects.get(id = user_id)
     user_find.screen_width = None
@@ -133,12 +137,13 @@ def user_reset(request, user_id):
     user_find.save()
     return redirect(reverse('manager_users_list'))
 
+@login_decorator()
 def user_delete(request, user_id):
     user_find = Users.objects.get(id = user_id)
     user_find.delete()
     return redirect(reverse('manager_users_list'))
 
-
+@login_decorator()
 def user_add(request):
     users = Users.objects.all().order_by("id")
     i = 1
@@ -148,20 +153,16 @@ def user_add(request):
         i += 1
     user = Users(id = i, name = request.GET.get('name'), check_list = request.GET.get('check'))
     user.save()
-
     return redirect(reverse('manager_users_list'))
 
+@login_decorator()
 def record_delete(request, record_id):
     record_find = Records.objects.get(id = record_id)
     record_find.delete()
     return redirect(reverse('manager_records_list'))
 
+@login_decorator()
 def manage_logout(request):
-    request.session.clear()
-    #request.session['is_login_manager']=True
-    if request.session.get('is_login_manager',None):
-        return redirect(reverse('manager_records_list'), permanent=True)
+    request.session.flush()
     return redirect(reverse('manager_login'), permanent=True)
-    #return render(request,'manager_login.html')
-
 
