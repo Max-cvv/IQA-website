@@ -17,12 +17,12 @@
             {% csrf_token %}
             <fieldset>
                 <legend id="word">请输入邀请码</legend>
-                <input id="input1" type="text" name="u"></input>
+                <input id="input1" type="text" name="u">
                 <button  class="but" type="submit">确定</button>
             </fieldset>
         </form>
     </div>
-    
+    <script type="text/javascript">{{script}}('{{wrong}}')</script>
 </body>
-<script type="text/javascript">{{script}}('{{wrong}}')</script>
+
 </html>

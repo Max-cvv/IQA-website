@@ -1,4 +1,4 @@
-function showModal(header, contain, button = null, url = null) {
+function showModal(header, contain, button, url) {
     $('.modal-title').html(header);
     $('.modal-body').html(contain);
     if(button){
