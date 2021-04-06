@@ -5,7 +5,7 @@ from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 import random
-
+from django.contrib.auth import logout
 # Create your views here.
 
 #装饰器函数
@@ -74,7 +74,8 @@ def submit(request):
         user.window_height = request.POST.get('window_height')
         user.screen_colorDepth = request.POST.get('screen_colorDepth')
         user.save()
-        request.session.clear()
+        #request.session.clear()
+        logout(request)
         return JsonResponse({'state':'ok'})
     return JsonResponse({'state':'fail'})
 
@@ -163,6 +164,7 @@ def record_delete(request, record_id):
 
 
 def manage_logout(request):
-    request.session.clear()
+    #request.session.clear()
+    logout(request)
     return redirect(reverse('manager_login'))
 
