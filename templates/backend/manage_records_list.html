@@ -1,4 +1,4 @@
-{% extends 'manage/base.html' %}
+{% extends 'backend/base.html' %}
 
 {% load staticfiles %}
 
@@ -39,7 +39,7 @@
                 <td>{{ record.operation}}</td>
                 <td>{{ record.operation_scroll }}</td>
                 <td>{{ record.op_time }}</td>
-                <td><a href="/record/delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
+                <td><a href="/manage/record/delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
               </tr>
                 {% endfor %}
             </tbody>

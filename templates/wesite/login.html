@@ -1,0 +1,28 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>图片评价</title>
+    <link href="{% static 'css/login.css' %}" type="text/css" rel="stylesheet"/>
+    <script src="{% static 'js/tab.js' %}" type="text/javascript"></script>
+</head>
+
+<body>
+    <noscript>对不起，你的浏览器不支持或禁用了JavaScript，无法正常使用此网站</noscript>
+<!--    <button id="but1" onclick="tab();" class = "tap">管理员登录</button>   -->
+    <div id="login">
+        <form method="post" >
+            {% csrf_token %}
+            <fieldset>
+                <legend id="word">请输入邀请码</legend>
+                <input id="input1" type="text" name="u">
+                <button  class="but" type="submit">确定</button>
+            </fieldset>
+        </form>
+    </div>
+    <script type="text/javascript">{{script}}('{{wrong}}')</script>
+</body>
+
+</html>
