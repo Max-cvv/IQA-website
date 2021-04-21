@@ -12,6 +12,9 @@ from utils.utils import login_decorator
 def test1(request):
     return render(request,'wesite/test.html')
 
+def label(request):
+    return render(request,'wesite/label.html')
+
 
 #用户端
 def log_in(request):
