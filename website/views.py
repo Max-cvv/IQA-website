@@ -9,6 +9,8 @@ from django.contrib.auth import logout
 from utils.utils import login_decorator
 # Create your views here.
 
+def test1(request):
+    return render(request,'wesite/test.html')
 
 
 #用户端

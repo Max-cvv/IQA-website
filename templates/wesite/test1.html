@@ -1,0 +1,56 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图片</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <link href="{% static 'css/hello1.css' %}" type="text/css" rel="stylesheet"/>
+    <script src="{% static 'js/openseadragon.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script> 
+    <script src="{% static 'js/img.manage.js' %}" type="text/javascript" defer=true></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+   
+</head>
+<script>var static_root = "{% static '' %}"</script>
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <table>
+            <tr id = "imgtable" >
+                <td><div id = "img1"></div></td>
+                <td id = "space"></td>
+                <td><div id = "img2"></div></td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+    </div>
+    <div class="cover" id="cover_left"></div>
+    <div class="cover" id="cover_right"></div>
+    <button class="check" id = "check_left" onclick="ck_left();"></button>
+    <button class="check" id = "check_right" onclick="ck_right();"></button>
+    <div id = "next"><button onclick="test();"></button></div>
+    <div id = "last"><button onclick="test1();"></button></div>
+
+    <div class="box">
+        <div class="box1">
+            <p>这是一个图片评价网站</p>
+            <ul>
+                <li>您可在网页中浏览开发者用不同手机收集得到的同一场景图片，并在两张图片中选择出其中您认为较好的一张图片</li>
+                <li>评价的标准包括但不限于：照片的分辨率，色调真实度，照片是否让您感到舒适</li>
+                <li>您可以选择在任意时刻点击右上角对勾图标结束测评</li>
+                <li>tips：您可以用鼠标滚轮进行放大与缩小、鼠标拖动进行多方向移动、图片左上角的图标复原图片大小，若您需要细致观察图片，将会用到这些操作</li>
+            </ul>
+            <button onclick="jQuery('.box').hide()">确认</button>
+        </div>
+    </div>
+    <button id = "tips" onclick="jQuery('.box').show()"></button>
+    <button id = "ok" onclick="submit()"></button>
+</body>
+
+</html>

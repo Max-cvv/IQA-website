@@ -1,0 +1,78 @@
+.navbar-default .navbar-brand {
+    color: rgb(0, 0, 0);
+}
+
+#start-btn{
+    color: rgb(0, 0, 0);
+    background-color: #c5ebff;
+    border-color: #c5ebff;
+    font-size: 18px;
+
+    display: inline-block;
+    padding: 12px 40px;
+    margin-bottom: 4px;
+    margin-top: 5px;
+    font-weight: 400;
+
+    text-align: center;
+    height: 41px;
+    border-radius: 25px;
+}
+
+#start-btn:hover{
+    background-color: #296294;
+    border-color: #296294;
+}
+
+.main{
+    margin-top: 81px;
+}
+div {
+    display: block;
+}
+
+.div1{
+    background-color: #eee
+}
+
+
+
+
+/* 导航栏颜色 */
+.navbar{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.navbar-default {
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+
+/* 轮播高度 */
+.item{
+    height: 600px;
+}
+/* 轮播按钮调整 */
+.carousel-control.left,.carousel-control.right{
+    background-image: none;
+}
+.carousel-control{
+    background: transparent;
+    width: 5%;
+}
+.carousel-control:hover{
+    background: transparent;
+}
+
+
+.carousel-control.left .glyphicon {
+    margin-left: -6rem;
+    color: #ccc;
+}
+
+.carousel-control.right .glyphicon {
+    margin-right: -6rem;
+    color: #ccc;
+}
