@@ -1,44 +1,28 @@
 $(function(){
-
-var img_num = 2;
-var col_num = 2;
-
 leadingViewer = null;
 var IS_sync = false;
-var flag = 0;
+
 var op1 = 0, op2 = 0;
 var check_left = false;
 var check_right = false;
 var D_1,D_2,CO_1,CO_2;
-var pho;
-var date1,date2;
+var pho1,pho2;
+var test_pho1 = 1,test_pho2= 1;
 
-var img_count = 1;
-var img_num_all = parseInt(img_num1);
-var navHeight = 61;
-
-
+//路径
 var root_prefixUrl = static_root + "files/images/";
 var rootpath = static_root + "files/photo/";
 
 //调整图片大小位置
+var img_num = 2;
+var col_num = 2;
+var navHeight = 61;
 $("#row1").height(($("#row1").width()-col_num*30)/((4*col_num)/3));
 padding_main = ((window.innerHeight - navHeight)/2 + navHeight) - $("#row1").height()/2;
 $(".main").css("padding-top", padding_main);
 
 
-$("#my-checkbox").bootstrapSwitch(
-    {
-        "size":"mini",
-        "labelText":'同步',
-    }
-);
-$("#my-checkbox").on('switchChange.bootstrapSwitch', function(event, state){
-    sync_tab(); 
-});
-
-
-
+//配置显示图片
 var tileSources = new Array();
 var viewers = new Array();
 var option = {
@@ -81,9 +65,6 @@ for(i = 0;i<img_num;i++){
     viewers[i] = OpenSeadragon(option);
 }
 
-
-get_next()
-
 var op_log1 = function(){
     op1 = op1 + 1;
 }
@@ -102,7 +83,99 @@ viewers[1].addHandler( 'canvas-scroll', op_log2);
 viewers[0].addHandler( 'canvas-click', ck_left);
 viewers[1].addHandler( 'canvas-click', ck_right);
 
+
+
+
+
+
+//操作教程
+var introduce_step = 1;
+var html_array = ['这是由不同手机拍摄的同一场景的图片，请您选择您认为<span class = "tips"><strong>质量较好</strong></span>的一张。',
+    '为查看更多细节，您可以使用鼠标对两张图片进行<span class = "tips"><strong>同步或不同步</strong></span>的<span class = "tips"><strong>放缩和拖动</strong></span>，点击<span class = "tips"><strong>复原</strong></span>获得初始状态。',
+    '若无法判断，您可点击工具栏的<span class = "tips"><strong>跳过</strong></span>。',
+    '当选择完成后，您可以通过键盘上的<span class = "tips"><strong>回车键</strong></span>或导航栏的下一组按钮来继续评价。点击完成将进入正式评价环节。'];
+var intro_array = ["[intro = 1]","[intro = 2]","[intro = 3]","[intro = 1]"];
+
+$("#itro-btn-pass").click(function(){
+        $("#itro").hide();
+        initFirstImg();
+});
+$("#itro-btn-next").click(introduce);
+introduce();
+$("#itro-btn-pass").show();
+$("#tips").click(function(){
+    introduce_step = 1;
+    introduce();
+    $("#itro-btn-pass").show();
+    $("#itro-btn-next").html("下一步");
+});
+
+function introduce(){
+    if(introduce_step == 5){
+        introduce_step = 1;
+        $("#itro").hide();
+        initFirstImg();
+    }
+    else{
+        if(introduce_step == 4){
+            $("#itro-btn-next").html("完成");
+            $("#itro-btn-pass").hide();
+        }
+        //$("[itro-pop]").remove();
+        select = $("#itro");
+        select.show();
+        select.css("top", $(intro_array[introduce_step-1]).css("height"));
+        select.css("left", "-276px");
+        //select.css("right", "200px");
+        $("#itro-title").html(introduce_step+" / 4");
+        $("#itro-content").html(html_array[introduce_step-1]);
+        $(intro_array[introduce_step-1]).after(select);
+        introduce_step++;
+    } 
+}
+
+
+
+
+//同步切换开关
+$("#my-checkbox").bootstrapSwitch(
+    {
+        "size":"small",
+        "labelText":'同步',
+        "labelWidth": 30,
+    }
+);
+$("#my-checkbox").on('switchChange.bootstrapSwitch', function(event, state){
+    sync_tab(); 
+});
+
+
+
 sync_tab(); 
+
+
+$("#start-btn").click(function(){
+    resetChoice();
+    url_xml_1 = rootpath+"D1/co1/xml/"+test_pho1+".xml"
+    url_1 = rootpath+"D1/co1/"+test_pho1+"/";
+    url_xml_2 = rootpath+"D2/co1/xml/"+test_pho2+".xml"
+    url_2 = rootpath+"D2/co1/"+test_pho2+"/";
+    get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+    get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+
+    test_pho1++;
+    test_pho2++;
+    if(test_pho1 == 59){
+        test_pho1 = 1;
+        test_pho2 = 2;
+    }
+})
+$("#nextimg").click(function(){
+    $("#start-btn").trigger("click");
+});
+$("#start-btn").trigger("click");
+
+
 
 $(document).keyup(function(event){
     if(event.keyCode ==13){
@@ -116,47 +189,17 @@ $("#reset-img").click(function(){
     viewers[1].viewport.goHome();
 });
 
-$("#reset-choice").click(function(){
+$("#reset-choice").click(resetChoice);
+
+
+function resetChoice(){
     check_right = false;
     check_left = false;
     $('#label_left').removeClass("labelActive");
     $('.openseadragon-container:first').removeClass("imgchosen");
     $('#label_right').removeClass("labelActive");
     $('.openseadragon-container:last').removeClass("imgchosen");
-});
-
-
-$("#start-btn").click(function(){
-
-    $(".progress-bar").css('width', (img_count/img_num_all)*100+'%');
-    if(img_count == img_num_all-1){
-        $("#start-btn").html("提交");
-    }
-    if(img_count<img_num_all){
-        img_count++;
-        if(check_right || check_left)
-        {
-            var record_ajax = get_records();
-            $.when(record_ajax).done(function () {
-                get_next();
-            });
-            $('#label_right').removeClass("labelActive");
-            $('.openseadragon-container:last').removeClass("imgchosen");
-            $('#label_left').removeClass("labelActive");
-            $('.openseadragon-container:first').removeClass("imgchosen");
-            check_right = false;
-            check_left = false;
-        }
-        else{
-            get_next();
-        }
-    }
-    else{
-        submit();
-    }
-
-    
-})
+}
 
 
 function ck_left(){
@@ -220,6 +263,143 @@ function get_tileSource(tileSource,viewer,xml_url,image_url)
    })
 }
 
+
+
+
+function clickButton(){
+    if(check_right || check_left)
+    {
+        getRecords_Next();
+        resetChoice();
+    }
+    else{
+        showModalButton("提示", "您还未做出选择，若不对此组做出评价，点击确定按钮跳转到下一步，否则关闭此窗口");
+        $("#btnModal").click(getRecords_Next);
+    }
+}
+
+function getRecords_Next(){
+
+    var result = 0;
+    if(check_left){
+        result = 0;
+    }
+    else if(check_right){
+        result = 1;
+    }
+    else{
+        result = -1;
+    }
+
+    dataToPost = {result:result,operation:op1,operation_scroll:op2};
+
+    $.ajax({
+        type:"post",
+        url:"/record/",
+        //async : false,
+        data:dataToPost,
+        dataType:"json",
+        success:function(msg){
+            if(msg.state=='fail'){
+                alert("!");
+            }
+            else if(msg.state=='ok'){
+                D_1 = msg.device1;
+                D_2 = msg.device2;
+                CO_1 = msg.co1;
+                CO_2 = msg.co2;
+                pho1 = msg.photo_num1;
+                pho2 = msg.photo_num1;
+                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
+                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
+                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
+                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
+
+                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+                progress = msg.progress;
+                $(".progress-bar").css('width', (msg.progress)*100+'%');
+                if(msg.progress == 1){
+                    $("#start-btn").html("提交");
+                }
+            }
+            else{
+                //showModalButton("提示", "提交成功，感谢您的参与！");
+            }
+        },
+        error: function(e){
+            alert(e.responseText);
+        }
+
+       })
+
+    op1 = 0;
+    op2 = 0;
+ }
+
+
+ function initFirstImg(){
+    //同步之后再绑定下一步事件
+    $("#start-btn").unbind("click");
+    $("#nextimg").unbind("click");
+    
+    $("#start-btn").click(function(){
+
+        clickButton();
+        
+    })
+
+    $("#nextimg").click(function(){
+        resetChoice();
+        getRecords_Next();
+        
+    })
+
+    $('#label_right').removeClass("labelActive");
+    $('.openseadragon-container:last').removeClass("imgchosen");
+    $('#label_left').removeClass("labelActive");
+    $('.openseadragon-container:first').removeClass("imgchosen");
+    check_right = false;
+    check_left = false;
+
+
+    $.ajax({
+        type:"post",
+        url:"/creatRecordList/",
+        //async : false,
+        data:{screen_width:screen.width,screen_height:screen.height,window_width:window.innerWidth,window_height:window.innerHeight,screen_colorDepth:screen.colorDepth},
+        dataType:"json",
+        success:function(msg){
+            if(msg.state=='fail'){
+                alert("creatRecordList fail!");
+            }
+            else{
+                D_1 = msg.device1;
+                D_2 = msg.device2;
+                CO_1 = msg.co1;
+                CO_2 = msg.co2;
+                pho1 = msg.photo_num1;
+                pho2 = msg.photo_num1;
+                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
+                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
+                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
+                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
+
+                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+
+                $(".progress-bar").css('width', (msg.progress)*100+'%');
+                if(msg.progress == 1){
+                    $("#start-btn").html("提交");
+                }
+            }
+        },
+        error: function(e){
+            alert(e.responseText);
+        }
+    });
+}
+
 function sync_tab(){
     if(!IS_sync){
         IS_sync = true;
@@ -261,98 +441,13 @@ function sync_tab(){
     }
 }
 
-function get_next(){
-    date1 = new Date();
-    $.ajax({
-        type:"post",
-        url:"/get_next/",
-        //async : false,
-        data:{},
-        dataType:"json",
-        success:function(msg){
-            if(msg.state=='fail'){
-                alert("!");
-            }
-            else{
-                D_1 = msg.device1;
-                D_2 = msg.device2;
-                CO_1 = msg.co1;
-                CO_2 = msg.co2;
-                pho = msg.photo_num;
-                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho+".xml"
-                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho+"/";
-                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho+".xml"
-                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho+"/";
-
-                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
-                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
-            }
-        },
-        error: function(e){
-            alert(e.responseText);
-        }
-
-       })
+function showModalButton(header, contain) {
+    $('.modal-title').html(header);
+    $('.modal-body').html(contain);
+    
+    $('.modal-footer').html('<button type="button" id = "btnModal" data-dismiss="modal" class="btn btn-primary">确定</button>');
+    
+    $("#myModal").modal();
 }
-
-function get_records(){
-    date2 = new Date();
-    var result = 0;
-    if(check_left){
-        result = 0;
-    }
-    else{
-        result = 1;
-    }
-
-    var img1 = D_1*10000+1000+pho;
-    var img2 = D_2*10000+1000+pho;
-    var date3 = parseInt((date2.getTime()-date1.getTime()));
-
-    //alert(img1);
-    record_ajax = $.ajax({
-        type:"post",
-        url:"/record/",
-        //async : false,
-        data:{img1:img1,img2:img2,result:result,operation:op1,operation_scroll:op2,op_time:date3},
-        dataType:"json",
-        success:function(msg){
-            if(msg.state=='fail'){
-                alert("!");
-            }
-        },
-        error: function(e){
-            alert(e.responseText);
-        }
-
-       })
-
-    op1 = 0;
-    op2 = 0;
-    return record_ajax;
- }
-
- function submit(){
-    if(check_right || check_left)
-    {
-        get_records();
-    }
-    var success =confirm("确定要提交吗？");
-    if(success){
-        $.ajax({
-            type:"post",
-            url:"/submit/",
-            data:{screen_width:screen.width,screen_height:screen.height,window_width:window.innerWidth,window_height:window.innerHeight,screen_colorDepth:screen.colorDepth},
-            dataType:"json",
-            success:function(msg){
-                if(msg.state == 'ok'){
-                    alert("提交成功！");
-                    window.location ="/index/";
-                }
-            }
-           })
-    } 
-}
-
 
 })

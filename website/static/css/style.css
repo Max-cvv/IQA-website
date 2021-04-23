@@ -51,8 +51,15 @@ div {
     display: block;
 }
 
-.div1{
+.div1,.div3{
     background-color: #eee
+}
+
+.jumbotron h1{
+    margin-bottom: 50px;
+}
+.jumbotron h2{
+    margin-bottom: 30px;
 }
 
 #my-form{
@@ -90,9 +97,7 @@ div {
 
 
 /* 轮播高度 */
-.item{
-    
-}
+
 /* 轮播按钮调整 */
 .carousel-control.left,.carousel-control.right{
     background-image: none;

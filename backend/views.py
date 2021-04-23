@@ -34,13 +34,18 @@ def manager_records_list(request):
     record_find = Records.objects.all().order_by("user_id")
     record_img = []
     for record in record_find:
-        record.op_time = float(record.op_time)/1000
+        if record.op_time:
+            record.op_time = float(record.op_time)/1000
+        else:
+            record.op_time = 0
         D1 = int(record.img1/10000)
         D2 = int(record.img2/10000)
         CO1 = int((record.img1-D1*10000)/1000)
         CO2 = int((record.img2-D2*10000)/1000)
         img1 = record.img1 % 1000
         img2 = record.img2 % 1000
+        
+
         dic = {'D1':D1, 'D2':D2, 'CO1':CO1, 'CO2':CO2, 'img1':img1, 'img2':img2}
         record_img.append(dic)
     return render(request, 'backend/manage_records_list.html', {'records_list':zip(record_find,record_img)})

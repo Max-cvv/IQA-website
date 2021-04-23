@@ -16,10 +16,9 @@
 
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap-switch.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/index_test.js' %}"></script>
 </head>
-<script>var static_root = "{% static '' %}" ;
-    var img_num1 = '{{ img_num }}' ;
-</script>
+<script>var static_root = "{% static '' %}"</script>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
@@ -35,26 +34,18 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="#about" >About</a></li>
             
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li class="dropdown-header">图片同步操作</li>
-                <li class = "drop-op"><input type="checkbox" name="my-checkbox" id = "my-checkbox" class = "my-nav" checked></li>
-                <li role="separator" class="divider"></li>
-                <li><a href = "#" id = "reset-img">图片复原</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href = "#" id = "nextimg">下一张</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href = "#" id = "reset-choice">清除当前选择</a></li>
-              </ul>
-            </li>
 
-            <li><a id = "start-btn" href="#" role="button">下一张</a></li>
+            <li class = "drop-op"><a href = "#"><input type="checkbox" name="my-checkbox" id = "my-checkbox" class = "my-nav" checked></a></li>
+            <li><a href = "#"  id = "reset-img">复原</a></li>
+            <li><a href = "#" intro = "2" id = "nextimg">跳过</a></li>
+            <li><a href = "#" intro = "3" id = "reset-choice">取消选择</a></li>
+            <li><a href = "#" id = "tips">教程</a></li>
+            <li><a id = "start-btn" intro = "1" href="#" role="button">下一组</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -72,11 +63,11 @@
     <div id = "main-back">
       
       <div class = "main container">
-        <div class="row" id="row1">
+        <div class="row"  id="row1">
           <div id = "img1" class="col-md-6 col-sm-6 col-xs-6"></div>
           <div id = "img2" class="col-md-6 col-sm-6 col-xs-6"></div>
         </div>
-        <div class="row" id="labelForRow1">
+        <div class="row"  id="labelForRow1">
           <div id = "label_left" class="col-md-6 col-sm-6 col-xs-6 label"><span class="glyphicon glyphicon-triangle-top"  aria-hidden="true"></span></div>
           <div id = "label_right"class="col-md-6 col-sm-6 col-xs-6 label"><span class="glyphicon glyphicon-triangle-top"  aria-hidden="true"></span></div>
         </div>
@@ -86,8 +77,20 @@
       </div> <!-- /container -->
     </div>
 
+    <div id = "itro" class="popover" role="tooltip">
+      <h3 id = "itro-title" class="popover-title"></h3>
+      <div  class="popover-content">
+        <div id = "itro-content"></div>
+        <div style = "text-align: right;">
+          <button id = "itro-btn-pass" class="itro-btn btn btn-default">跳过教程</button><span>&nbsp&nbsp</span>
+          <button id = "itro-btn-next"class="itro-btn btn btn-primary" style = "float:right">下一步</button>
+        </div>
+        
+      </div>
+    </div>
+
+  {% include 'wesite/modal.html' %}
     
-    <script type="text/javascript" src="{% static 'js/index_test.js' %}"></script>
 </body>
 
 </html>

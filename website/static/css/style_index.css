@@ -3,9 +3,9 @@
 }
 
 #start-btn{
-    color: rgb(0, 0, 0);
-    background-color: #c5ebff;
-    border-color: #c5ebff;
+    color: rgb(255, 255, 255);
+    background-color: #337ab7;
+    border-color: #337ab7;
     font-size: 18px;
 
     display: inline-block;
@@ -22,6 +22,15 @@
 #start-btn:hover{
     background-color: #296294;
     border-color: #296294;
+}
+
+
+#itro{
+    width: 276px;
+}
+
+.tips{
+    color: #337ab7;
 }
 
 .my-nav{
@@ -116,6 +125,8 @@ div {
 
 .drop-op{
     text-align: center;
+    height: 50px;
+    margin-top: -4px;
 }
 
 .my-progress{

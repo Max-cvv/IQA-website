@@ -63,40 +63,93 @@ def log_in(request):
 @login_decorator('is_login', 'homepage')
 def index(request):
     img_num = 20
-    return render(request, 'wesite/index_test.html', {'img_num':img_num})
+    return render(request, 'wesite/index_test.html')
+
+
+@csrf_exempt
+def creatRecordList(request):
+    if request.method=='POST':
+        user_id = request.session['userID']
+        user_find = Users.objects.get(id = user_id)
+        user_find.screen_width = request.POST.get('screen_width')
+        user_find.screen_height = request.POST.get('screen_height')
+        user_find.window_width = request.POST.get('window_width')
+        user_find.window_height = request.POST.get('window_height')
+        user_find.screen_colorDepth = request.POST.get('screen_colorDepth')
+        user_find.save()
+
+        if user_find.record_all:
+            pass
+        else:
+            #获得需要评价的总数和具体条目
+            record_list = []
+            record_all = 20
+
+            user_find.record_all = record_all
+            user_find.record_now = 1
+            user_find.save()
+
+            for i in range(1,record_all+1):
+                img = random.randint(1,58)
+                record = Records(user_id=user_id,user_record_id = i, img1=11000+img,img2=21000+img)
+                record.save()
+
+        record_now = user_find.record_now
+        record_all = user_find.record_all
+        if record_now == 1:
+            progress = 0
+        else:
+            progress = record_now/record_all
+
+        #获得当前要显示的两张图片
+        record = Records.objects.get(user_id=user_id, user_record_id = record_now)
+        D1 = int(record.img1/10000)
+        D2 = int(record.img2/10000)
+        CO1 = int((record.img1-D1*10000)/1000)
+        CO2 = int((record.img2-D2*10000)/1000)
+        img1 = record.img1 % 1000
+        img2 = record.img2 % 1000
+        return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
+                'photo_num1':img1, 'photo_num1':img2, 'progress':progress})
+    return JsonResponse({'state':'fail'})
 
 
 @csrf_exempt
 def record(request):
     if request.method=='POST':
-        record = Records(user_id=request.session['userID'],img1=request.POST.get('img1'),img2=request.POST.get('img2'),\
-            result = request.POST.get('result'),operation = request.POST.get('operation'), \
-            operation_scroll = request.POST.get('operation_scroll'), op_time = request.POST.get('op_time'))
+        user_id = request.session['userID']
+        user_find = Users.objects.get(id = user_id)
+        record_now = user_find.record_now
+        record_next = record_now + 1
+        record_all = user_find.record_all
+        user_find.record_now = record_now + 1
+        user_find.save()
+
+        record = Records.objects.get(user_id=user_id, user_record_id = record_now)
+        record.result = request.POST.get('result')
+        record.operation = request.POST.get('operation')
+        record.operation_scroll = request.POST.get('operation_scroll')
+        record.submit_time = datetime.datetime.now()
         record.save()
-        return JsonResponse({'state':'ok'})
+
+        if record_next <= record_all:
+            record = Records.objects.get(user_id=user_id, user_record_id = record_next)
+            progress = record_next/record_all
+            D1 = int(record.img1/10000)
+            D2 = int(record.img2/10000)
+            CO1 = int((record.img1-D1*10000)/1000)
+            CO2 = int((record.img2-D2*10000)/1000)
+            img1 = record.img1 % 1000
+            img2 = record.img2 % 1000
+            return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
+                    'photo_num1':img1, 'photo_num1':img2, 'progress':progress})
+        else:
+            user_find.submit_time=datetime.datetime.now()
+            user_find.save()
+            #logout(request)
+            return JsonResponse({'state':'handSuccess'})
     else:
         return JsonResponse({'state':'fail'})
 
 
-@csrf_exempt
-def submit(request):
-    if request.method=='POST':
-        user = Users.objects.get(id=request.session['userID'])
-        user.submit_time=datetime.datetime.now()
-        user.screen_width = request.POST.get('screen_width')
-        user.screen_height = request.POST.get('screen_height')
-        user.window_width = request.POST.get('window_width')
-        user.window_height = request.POST.get('window_height')
-        user.screen_colorDepth = request.POST.get('screen_colorDepth')
-        user.save()
-        #request.session.clear()
-        logout(request)
-        return JsonResponse({'state':'ok'})
-    return JsonResponse({'state':'fail'})
-
-@csrf_exempt
-def get_next(request):
-    if request.method=='POST':
-        return JsonResponse({'state':'ok', 'device1':1, 'device2':1,'co1':1, 'co2':1, 'photo_num':random.randint(1,58)})
-    return JsonResponse({'state':'fail'})
 
