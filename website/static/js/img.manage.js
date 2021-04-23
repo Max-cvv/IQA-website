@@ -103,7 +103,6 @@ window.onload = function()
     viewer2.addHandler( 'canvas-drag-end', op_log1);
     viewer2.addHandler( 'canvas-scroll', op_log2);
     sync_tab(); 
-    
 }
 
 
@@ -162,8 +161,7 @@ function test(){
     }
     else{
         get_next();
-    }
-    
+    } 
    
 }
 function get_next(){

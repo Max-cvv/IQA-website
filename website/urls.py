@@ -11,4 +11,6 @@ urlpatterns = [
     path('record/',  views.record, name = 'record'),
     path('submit/', views.submit, name = 'submit'),
     path('get_next/', views.get_next, name = 'get_next'),
+
+    path('hand_form/', views.hand_form),
 ]

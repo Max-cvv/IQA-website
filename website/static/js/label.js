@@ -2,8 +2,6 @@ var img_num = 6;
 var col_num = 3;
 
 
-
-
 var root_prefixUrl = static_root + "files/images/";
 var rootpath = static_root + "files/photo/";
 $("#row1").height(($("#row1").width()-col_num*30)/((4*col_num)/3));
@@ -52,13 +50,13 @@ for(i = 0;i<img_num;i++){
 }
 
 
-D_array = new Array("1","2","3", "4","6","7");
+D_array = new Array("1","2","3", "4","5","6");
 pho = 1;
 
 for(i = 0;i<img_num;i++){
     imgid = i+1;
-    url_xml = rootpath+"D"+D_array[i]+"/co4/xml/"+pho+".xml"
-    url = rootpath+"D"+D_array[i]+"/co4/"+pho+"/";
+    url_xml = rootpath+"D"+D_array[i]+"/co2/xml/"+pho+".xml"
+    url = rootpath+"D"+D_array[i]+"/co2/"+pho+"/";
     get_tileSource(tileSource[i],viewer[i], url_xml,url);
 }
 
@@ -66,8 +64,8 @@ $("#nextimg").click(function(){
     pho++;
     for(i = 0;i<img_num;i++){
         imgid = i+1;
-        url_xml = rootpath+"D"+D_array[i]+"/co4/xml/"+pho+".xml"
-        url = rootpath+"D"+D_array[i]+"/co4/"+pho+"/";
+        url_xml = rootpath+"D"+D_array[i]+"/co2/xml/"+pho+".xml"
+        url = rootpath+"D"+D_array[i]+"/co2/"+pho+"/";
         get_tileSource(tileSource[i],viewer[i], url_xml,url);
     }
 })

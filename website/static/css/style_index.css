@@ -24,6 +24,11 @@
     border-color: #296294;
 }
 
+.my-nav{
+    margin-bottom: 4px;
+    margin-top: 5px;
+}
+
 html{
     height: 100%;
 }
@@ -33,8 +38,23 @@ body{
     overflow-y:hidden;
 }
 
-.main{
-    padding-top: 90px;
+
+#main-back{
+    background: #e6e6e6;
+    height: 100%;
+}
+
+
+
+@media (min-width: 1500px){
+    .container {
+    width: 1460px;
+}
+}
+@media (min-width: 1900px){
+    .container {
+    width: 1850px;
+}
 }
 
 
@@ -70,15 +90,44 @@ div {
     color: green;
 }
 
+.imgchosen{
+    -moz-box-shadow:0px 0px 13px #333333; 
+    -webkit-box-shadow:0px 0px 13px #333333;
+    box-shadow:0px 0px 13px #333333;
+}
+
+
+.navbar-default {
+    border-bottom: 0px;
+    margin-bottom: 0px;
+}
 
 
 /* 导航栏颜色 */
 .navbar{
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 5px;
+    padding-bottom: 0px;
 }
 
 .navbar-default {
     background-color: #ffffff;
     border-color: #ffffff;
+}
+
+.drop-op{
+    text-align: center;
+}
+
+.my-progress{
+    width: 100%;
+    float: left;
+    margin-top: 0px;
+}
+
+.my-progress .progress{
+    margin-bottom: 0px;
+    border-radius:0px;
+    height: 5px;
+    background-color:white;
+    box-shadow:none;
 }

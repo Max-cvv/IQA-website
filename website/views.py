@@ -10,10 +10,28 @@ from utils.utils import login_decorator
 # Create your views here.
 
 def test1(request):
-    return render(request,'wesite/test.html')
+    return render(request,'wesite/homepage.html')
 
 def label(request):
-    return render(request,'wesite/label.html')
+    return render(request,'wesite/index_test.html')
+#homepage
+@csrf_exempt
+def hand_form(request):
+    if request.method=='POST':
+        age=request.POST.get('age')
+        job=request.POST.get('job')
+        gender=request.POST.get('gender')
+        isGlasses=request.POST.get('isGlasses')
+
+        check_list = "abcdoo"
+
+        user = Users(check_list = check_list)
+        user.save()
+
+        return JsonResponse({'state':'ok', 'auth_code':check_list})
+    else:
+        return JsonResponse({'state':'fail'})
+
 
 
 #用户端
@@ -42,9 +60,10 @@ def log_in(request):
             return render(request,'wesite/login.html', context)
     return render(request,'wesite/login.html')
 
-@login_decorator('is_login', 'user_login')
+@login_decorator('is_login', 'homepage')
 def index(request):
-    return render(request, 'wesite/index.html')
+    img_num = 20
+    return render(request, 'wesite/index_test.html', {'img_num':img_num})
 
 
 @csrf_exempt
@@ -78,6 +97,6 @@ def submit(request):
 @csrf_exempt
 def get_next(request):
     if request.method=='POST':
-        return JsonResponse({'state':'ok', 'device1':1, 'device2':1, 'photo_num':random.randint(1,58)})
+        return JsonResponse({'state':'ok', 'device1':1, 'device2':1,'co1':1, 'co2':1, 'photo_num':random.randint(1,58)})
     return JsonResponse({'state':'fail'})
 
