@@ -83,9 +83,56 @@ viewers[1].addHandler( 'canvas-scroll', op_log2);
 viewers[0].addHandler( 'canvas-click', ck_left);
 viewers[1].addHandler( 'canvas-click', ck_right);
 
+//加载中动画
+img_loding = '<img id="overlay" src ="'+static_root+'3.gif">';
+$('#img1').append('<div id="overlay">Loading...</div>');
+loading_height = $('#img1').height();
+loading_width = $('#img1').width();
+loading_innerWidth = $('#img1').innerWidth();
+div_height = $('#overlay').height();
+div_width = $('#overlay').width();
+$('#overlay')
+    //.height(docHeight)
+    .css({
+    //'opacity': .9, //透明度
+    'position': 'absolute',
+    'font-size':'30px',
+    'top': loading_height/2-50,
+    'left': (loading_innerWidth)/2-75,
+    //'background-color': 'black',
+    'width': '150px',
+    'height': '50px',
+
+    'z-index': 5000 //保证这个悬浮层位于其它内容之上
+    });
+
+$('#img2').append('<div id="overlay1">Loading...</div>');
+$('#overlay1')
+    //.height(docHeight)
+    .css({
+    //'opacity': .9, //透明度
+    'position': 'absolute',
+    'font-size':'30px',
+    'top': loading_height/2-50,
+    'left': (loading_innerWidth)/2-75,
+    //'background-color': 'black',
+    'width': '150px',
+    'height': '50px',
+
+    'z-index': 5000 //保证这个悬浮层位于其它内容之上
+    });
+
+var fade_loading1 = function(){
+    $('#overlay').hide();
+}
+
+var fade_loading2 = function(){
+    $('#overlay1').hide();
+}
 
 
-
+viewers[0].addHandler( 'tile-drawn', fade_loading1);
+viewers[1].addHandler( 'tile-drawn', fade_loading2);
 
 
 //操作教程
@@ -155,6 +202,8 @@ sync_tab();
 
 
 $("#start-btn").click(function(){
+    $('#overlay').show();
+    $('#overlay1').show();
     resetChoice();
     url_xml_1 = rootpath+"D1/co1/xml/"+test_pho1+".xml"
     url_1 = rootpath+"D1/co1/"+test_pho1+"/";
@@ -279,7 +328,8 @@ function clickButton(){
 }
 
 function getRecords_Next(){
-
+    $('#overlay').show();
+    $('#overlay1').show();
     var result = 0;
     if(check_left){
         result = 0;

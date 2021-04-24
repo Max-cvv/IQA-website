@@ -16,7 +16,12 @@ body {
     background-color: #000000;
 }
 
-
+.navbar{
+    background:url(../files/钱图2.jpg);
+    background-size:1536px;
+    background-repeat:no-repeat;
+    height: 1000px;
+}
 
 .navbar-default .navbar-brand {
     color: rgb(0, 0, 0);
@@ -51,7 +56,10 @@ div {
     display: block;
 }
 
-.div1,.div3{
+.div3{
+    background-color: #eee
+}
+.div1{
     background-color: #eee
 }
 

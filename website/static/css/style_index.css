@@ -112,6 +112,9 @@ div {
 }
 
 
+#overlay{
+    filter:chroma(color=#ffffff);
+}
 /* 导航栏颜色 */
 .navbar{
     padding-top: 5px;

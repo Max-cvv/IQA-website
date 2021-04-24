@@ -1,5 +1,28 @@
 $(function(){
 
+
+    
+       
+     //setTimeout(function(){$('#overlay').fadeOut('slow')}, 3000); //设置3秒后覆盖层自动淡出
+  
+
+
+function scroll() {
+    var top = $(".div3").offset().top;//获取导航栏变色的位置距顶部的高度
+    var scrollTop = $(window).scrollTop();//获取当前窗口距顶部的高度
+    //alert(top+scrollTop);
+    if (scrollTop < top) {
+        $('.navbar').css('opacity', 1);
+    } else {
+        
+        $('.navbar').css('opacity', 0.1);
+    }
+}
+$(window).scroll(function() {
+    scroll();
+});
+
+
 $("#form-btn").click(function(){
 
     
