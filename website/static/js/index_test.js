@@ -130,9 +130,20 @@ var fade_loading2 = function(){
     $('#overlay1').hide();
 }
 
+var show_loading1 = function(){
+    $('#overlay').show();
+}
+
+var show_loading2 = function(){
+    $('#overlay1').show();
+}
+
 
 viewers[0].addHandler( 'tile-drawn', fade_loading1);
 viewers[1].addHandler( 'tile-drawn', fade_loading2);
+
+viewers[0].addHandler( 'close', show_loading1);
+viewers[1].addHandler( 'close', show_loading2);
 
 
 //操作教程
@@ -202,8 +213,6 @@ sync_tab();
 
 
 $("#start-btn").click(function(){
-    $('#overlay').show();
-    $('#overlay1').show();
     resetChoice();
     url_xml_1 = rootpath+"D1/co1/xml/"+test_pho1+".xml"
     url_1 = rootpath+"D1/co1/"+test_pho1+"/";
@@ -328,8 +337,6 @@ function clickButton(){
 }
 
 function getRecords_Next(){
-    $('#overlay').show();
-    $('#overlay1').show();
     var result = 0;
     if(check_left){
         result = 0;
