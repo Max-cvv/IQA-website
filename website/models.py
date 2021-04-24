@@ -26,7 +26,16 @@ class Records(models.Model):
     operation_scroll = models.IntegerField(blank=True,null=True)
     op_time = models.IntegerField(blank=True,null=True)
     submit_time = models.DateTimeField(blank=True,null=True)
+
 class Managers(models.Model):
     user_id = models.CharField(max_length=30)
     user_password = models.CharField(max_length=30)
+
+class Question(models.Model):
+    age = models.IntegerField()
+    isGlasses = models.IntegerField()
+    gender = models.IntegerField()
+    edu = models.IntegerField()
+    pho = models.IntegerField()
+    screen = models.CharField(max_length=60,blank=True,null=True)
     

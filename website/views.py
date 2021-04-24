@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from website.models import Users, Records
+from website.models import Users, Records, Question
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -9,26 +9,33 @@ from django.contrib.auth import logout
 from utils.utils import login_decorator
 # Create your views here.
 
-def test1(request):
-    return render(request,'wesite/homepage.html')
+def homepage(request):
+    if request.session.get('is_login',None):
+        return redirect(reverse('index'))
+    else:
+        return render(request,'wesite/homepage.html')
 
-def label(request):
-    return render(request,'wesite/index_test.html')
+
 #homepage
 @csrf_exempt
 def hand_form(request):
     if request.method=='POST':
-        age=request.POST.get('age')
-        job=request.POST.get('job')
+        age=request.POST.get('age') 
         gender=request.POST.get('gender')
+        edu=request.POST.get('edu')
         isGlasses=request.POST.get('isGlasses')
+        pho=request.POST.get('pho')
+        screen=request.POST.get('screen')
 
-        check_list = "abcdoo"
-
-        user = Users(check_list = check_list)
+        qa = Question(age = age, gender = gender, edu = edu, isGlasses = isGlasses, pho = pho)
+        qa.save()
+        user = Users(login_time = datetime.datetime.now())
         user.save()
 
-        return JsonResponse({'state':'ok', 'auth_code':check_list})
+        request.session['is_login']=True   #认证为真
+        request.session['userID']=user.id
+
+        return JsonResponse({'state':'ok', })
     else:
         return JsonResponse({'state':'fail'})
 
@@ -60,9 +67,9 @@ def log_in(request):
             return render(request,'wesite/login.html', context)
     return render(request,'wesite/login.html')
 
+
 @login_decorator('is_login', 'homepage')
 def index(request):
-    img_num = 20
     return render(request, 'wesite/index_test.html')
 
 
@@ -146,7 +153,7 @@ def record(request):
         else:
             user_find.submit_time=datetime.datetime.now()
             user_find.save()
-            #logout(request)
+            logout(request)
             return JsonResponse({'state':'handSuccess'})
     else:
         return JsonResponse({'state':'fail'})

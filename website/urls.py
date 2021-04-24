@@ -3,8 +3,9 @@ from website import views
 
 urlpatterns = [
     
+    path('', views.homepage, name = "homepage"),
 
-    path('', views.log_in, name = 'user_login'),
+    path('test/', views.log_in, name = 'user_login'),
     path('index/', views.index, name = 'index'),
 
 

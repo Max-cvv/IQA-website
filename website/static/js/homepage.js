@@ -1,21 +1,18 @@
 $(function(){
 
-
-    
-       
-     //setTimeout(function(){$('#overlay').fadeOut('slow')}, 3000); //设置3秒后覆盖层自动淡出
-  
-
-
 function scroll() {
-    var top = $(".div3").offset().top;//获取导航栏变色的位置距顶部的高度
+    //var top = $(".div3").offset().top;//获取导航栏变色的位置距顶部的高度
     var scrollTop = $(window).scrollTop();//获取当前窗口距顶部的高度
-    //alert(top+scrollTop);
-    if (scrollTop < top) {
-        $('.navbar').css('opacity', 1);
+    //alert(scrollTop);
+    if (scrollTop>40) {
+        //alert("1");
+        $('.navbar-default').css({
+            'border-bottom':'1px solid rgb(214, 214, 214)'}
+            );
     } else {
-        
-        $('.navbar').css('opacity', 0.1);
+        $('.navbar-default').css({
+            'border-bottom':'0px solid rgb(214, 214, 214)'}
+            );
     }
 }
 $(window).scroll(function() {
@@ -26,24 +23,28 @@ $(window).scroll(function() {
 $("#form-btn").click(function(){
 
     
-    var age = $("#age").val();
-    var job = $("#job").val();
+    
+    
     var gender = $("[name = 'gender']:checked").val();
+    var age = $("[name = 'age']:checked").val();
     var isGlasses = $("[name = 'isGlasses']:checked").val();
-    if(age && job && gender && isGlasses){
+    var edu = $("[name = 'edu']:checked").val();
+    var pho = $("[name = 'pho']:checked").val();
+    var screen = $("#screen").val();
+    if(age && isGlasses && gender  && edu && pho){
         $.ajax({
             type:"post",
             url:"/hand_form/",
             //async : false,
-            data:{"age":age, "job":job, "gender":gender, "isGlasses":isGlasses},
+            data:{"age":age, "gender":gender, "isGlasses":isGlasses, "edu":edu, "pho":pho, "screen":screen},
             dataType:"json",
             success:function(msg){
                 if(msg.state=='fail'){
                     alert("!");
                 }
                 else{
-                    code = msg.auth_code;
-                    alert(code);
+                    //window.location ="/index/";
+                    window.open('/index/');
                 }
             },
             error: function(e){
@@ -53,7 +54,7 @@ $("#form-btn").click(function(){
         })
     }
     else{
-        showModal("提示", "请填写完整");
+        showModal("提示", "请将必填项填写完整");
     }
     
 

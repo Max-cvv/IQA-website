@@ -19,7 +19,7 @@
 </head>
 <script>var static_root = "{% static '' %}"</script>
 <body>
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -28,28 +28,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">图片评价网站</a>
+          <a class="navbar-brand" href="#">拍摄质量评价</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="#">Home</a></li>
             <li><a href="http://gr.xjtu.edu.cn/en/web/xqmou/iqa" target="_blank" >About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
+            <li><a href="#my-footer">Contact</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a  id = "start-btn" href="#div2" role="button">Start Now!</a></li>
+            <li><a  id = "start-btn" href="#start" role="button">Start Now!</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -58,130 +46,200 @@
     <div class="main">
       <div class="div1">
         <div class="container">
-
-          <div class = "col-md-8 col-sm-8 col-xs-8">
-          
-            <div class="my-homepage jumbotron">
-                <h1><strong>关于我们</strong></h1>
-                <h4>随手拍照分享已经成为人们日常生活中的重要组成部分。</h4>
-                <p>传统摄影器材的质量评价涵盖了清晰度、畸变、动态范围和色彩精度等多种客观检测内容，但如何从多个单项指标的测试中综合得到摄影器材的整体评价，目前依然是一个难题。</p>
-                <p>因此图像所正在研究一个摄影器材的主观拍摄质量的评价方法，并且尝试提供市场上主流手机的拍摄质量评价排名。</p>
-                <p>
-                <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-                </p>
+          <h1 id = "my-h1"><strong>About us</strong></h1>
+          <div class = "row">
+            <div class = "col-md-7 col-sm-7 col-xs-7" id = "my-maincontent">
+            
+              <div class="my-homepage">
+                  
+                  <h3>随手拍照已经成为人们生活中的重要组成部分。</h3>
+                  <p>图像所正在研究一个针对摄影器材的主观拍摄质量的评价方法，并且尝试提供市场上主流手机的拍摄质量评价排名。</p>
+                  <p>而这项工作的研究基础是构建手机拍摄照片质量<strong>主观评价数据库</strong>。我们制作了该网站开展心理学实验以获取图像主观评价数据。</p>
+                  <p><span class="glyphicon glyphicon-menu-down"></span>照片质量主观评价数据库有如下用途。</p>
+              </div>
+            </div>
+            
+            <div class = "col-md-5 col-sm-5 col-xs-5" id = "my-img">
+              <img src = "{% static 'takePhoto.png' %}" style = "width: 100%;">
             </div>
           </div>
         </div>
       </div>
+
       <div class="div2">
         <div class = "container">
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                </ol>
-
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox">
-                    <div class="item active">
-                        <div class="jumbotron">
-                            <h1>cw is sb</h1>
-                            <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-                            <p>To see the difference between static and fixed top navbars, just scroll.</p>
-                            <p>
-                            <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="jumbotron">
-                            <h1>cw is  xiaotiancai</h1>
-                            <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-                            <p>To see the difference between static and fixed top navbars, just scroll.</p>
-                            <p>
-                            <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="jumbotron">
-                            <h1>Navbar example</h1>
-                            <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-                            <p>To see the difference between static and fixed top navbars, just scroll.</p>
-                            <p>
-                            <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                    <span class="glyphicon glyphicon-chevron-left"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+          <div class = "row" >
+            <div class = "col-sm-3" style = "margin-left: 4%;">
+              <div class = "my-content-style">
+                <h4>研究图像质量评价算法</h4>
+                <p>基于一个具有一定规模的图像质量评价数据库，可以更加充分的了解人眼视觉系统与图像质量之间的关系，帮助领域内的相关人员更好的研究图像质量算法，从而不断地改善现实生活中的图像质量。</p>
+              </div>
+              
             </div>
-        </div>         
+            <div class = "col-sm-3 col-sm-offset-1">
+
+              <img src = "{% static 'ai.png' %}" style = "width: 100%;">
+            </div>
+            <div class = "col-sm-3 col-sm-offset-1">
+              <div class = "my-content-style">
+                <h4>评价算法性能</h4>
+                <p>通过组织主观实验获取图像的主观质量，从而可以利用主客观质量的一致性来判断客观评价算法的性能。同时主观质量评价数据库可以作为基于机器学习的图像质量算法的训练数据。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
       </div>
+    
 
-      <div class = "div3" id ="div2">
+      <div class = "div3" id = "start">
         <div class = "container">
-          <div id = "my-form" class="col-md-3 col-sm-3 col-xs-3">
-            
-              <div class="form-group">
-                <label>年龄<span class = "label-star">*</span></label>
-                <input type="text" class="form-control" id="age">
+          <div class = "row">
+            <div class="col-sm-8">
+              <div class = "my-tips-style">
+                <p class = "tips-h">如何参与？</p>
+                <p>1.请您填写右侧的个人信息以帮助我们此次主观实验的信息采集，我们保证只会将其用于后续模型研究之中。</p>
+                <p>2.<span class = "label-star">填写完成后</span>点击问卷下方按钮，您将<span class = "label-star">自动跳转</span>到实验平台。</p>
+                <p>3.进入平台后将有操作指引您完成实验。建议您进入平台前将<span class = "label-star">浏览器最大化</span>。</p>
+                <p>4.若您不小心关闭实验平台，可以通过再次访问此页面恢复进程。</p>
               </div>
-              <div class="form-group">
-                <label>职业<span class = "label-star">*</span></label>
-                <input type="text" class="form-control" id="job">
+              <div class = "my-tips-style">
+                <p class = "tips-h">关于实验开展方式</p>
+                <p>1.针对本次图像主观评价实验，我们采用<span class = "label-star">两两比较</span>的方法以尽可能减少各种因素的干扰。</p>
+                <p>2.对于每一组图片，您只需要选择您认为更好的一张图。</p>
+                <p>3.评价的标准包括但不限于：照片的分辨率，色调真实度。但请您尽量关注于<span class = "label-star">照片本身质量</span>而不是图片内容。</p>
               </div>
+
+            </div>
+            <div class="col-sm-3">
+              <div id = "my-form-wrapper">
+
               
+                <div id = "my-form">
+                  <div class="form-group">
+                    <label>1.您的性别<span class = "label-star">*</span></label> 
+                    <div class="radio">
+                    <label class="radio-inline">
+                      <input type="radio" name="gender"  value="1"> 男
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="gender" value="2"> 女
+                    </label>
+                    </div>
+                  </div>
 
-              <div class="form-group">
-                <label>性别<span class = "label-star">*</span></label> 
-                <div class="radio">
-                <label class="radio-inline">
-                  <input type="radio" name="gender" id="1" value="1"> 男
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="gender" id="2" value="2"> 女
-                </label>
+                  <div class="form-group">
+                    <label>2.您的年龄范围<span class = "label-star">*</span></label> 
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="age"  value="1"> 1-20岁
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="age"  value="2"> 20-30岁
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="age"  value="3"> 30-50岁
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="age"  value="4"> 50岁以上
+                      </label>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <label>3.您是否经常戴眼镜<span class = "label-star">*</span></label> 
+                    <div class="radio">
+                      <label class="radio-inline">
+                        <input type="radio" name="isGlasses" value="1"> 是
+                      </label>
+                      <label class="radio-inline">
+                        <input type="radio" name="isGlasses" value="2"> 否
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>4.您的受教育程度<span class = "label-star">*</span></label> 
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="edu" value="1"> 高中及以下
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="edu" value="2"> 大学本科或专科
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="edu"  value="3"> 研究生
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="edu"  value="4"> 博士及以上
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>5.您是否有一定的拍摄习惯<span class = "label-star">*</span></label> 
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="pho"  value="1"> 经常
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="pho"  value="2"> 一般
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="pho"  value="3"> 很少
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="pho"  value="4"> 几乎没有
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="screen">6.您使用的笔记本或显示器品牌</label>
+                    <input type="text" class="form-control" id="screen" placeholder="非必填">
+                  </div>
+
+
+
+
+                  <div class="form-group" id = "form-btn-div">
+                    <button id = "form-btn" class="btn btn-default">Submit</button>
+                  </div>
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label>是否戴眼镜<span class = "label-star">*</span></label> 
-                <div class="radio">
-                  <label class="radio-inline">
-                    <input type="radio" name="isGlasses" id="1" value="1"> 是
-                  </label>
-                  <label class="radio-inline">
-                    <input type="radio" name="isGlasses" id="2" value="2"> 否
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group" id = "form-btn-div">
-                <button id = "form-btn" class="btn btn-default">Submit</button>
-              </div>
-              
+                
+              </div> 
+            </div>
           </div>
         </div>
       </div>
     </div> <!-- /container -->
-
+  
     <footer class="footer">
       <div class="container">
-        <p class="text-muted">Place sticky footer content here.</p>
+        <div id = "my-footer">
+          <div>Powered by <a href="https://www.djangoproject.com/" target="_blank">Django</a> <a href="https://www.bootcss.com/" target="_blank">Bootstrap</a></div>
+          <div><span class="glyphicon glyphicon-map-marker"> </span> 陕西省西安市碑林区西安交通大学</div>
+          <div><span class="glyphicon glyphicon-envelope"> </span> 1176688537@qq.com</div>
+        </div>
+        
       </div>
     </footer>
 

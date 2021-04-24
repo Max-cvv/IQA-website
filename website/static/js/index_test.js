@@ -148,7 +148,7 @@ viewers[1].addHandler( 'close', show_loading2);
 
 //操作教程
 var introduce_step = 1;
-var html_array = ['这是由不同手机拍摄的同一场景的图片，请您选择您认为<span class = "tips"><strong>质量较好</strong></span>的一张。',
+var html_array = ['这是我们用不同型号手机拍摄的图片，请您选择您认为<span class = "tips"><strong>质量较好</strong></span>的一张。',
     '为查看更多细节，您可以使用鼠标对两张图片进行<span class = "tips"><strong>同步或不同步</strong></span>的<span class = "tips"><strong>放缩和拖动</strong></span>，点击<span class = "tips"><strong>复原</strong></span>获得初始状态。',
     '若无法判断，您可点击工具栏的<span class = "tips"><strong>跳过</strong></span>。',
     '当选择完成后，您可以通过键盘上的<span class = "tips"><strong>回车键</strong></span>或导航栏的下一组按钮来继续评价。点击完成将进入正式评价环节。'];
@@ -381,7 +381,7 @@ function getRecords_Next(){
                 }
             }
             else{
-                //showModalButton("提示", "提交成功，感谢您的参与！");
+                window.location ="/";
             }
         },
         error: function(e){
@@ -396,6 +396,9 @@ function getRecords_Next(){
 
 
  function initFirstImg(){
+
+    viewers[0].close();
+    viewers[1].close();
     //同步之后再绑定下一步事件
     $("#start-btn").unbind("click");
     $("#nextimg").unbind("click");
