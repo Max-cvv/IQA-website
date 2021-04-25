@@ -25,7 +25,11 @@ if(cookies){
     $("#my-loading").hide();
     $("#my-yanzhengma").html(cookies);
     $("#my-loading-after").show();
+    $("#start-btn").attr("href","/login/");
+    $("#start-btn").attr("target","_blank");
+    
 }
+
 
 $("#form-btn").click(function(){
     
@@ -59,6 +63,8 @@ $("#form-btn").click(function(){
                     $("#my-loading").hide();
                     $("#my-yanzhengma").html(msg.code);
                     $("#my-loading-after").show();
+                    $("#start-btn").attr("href","/login/");
+                    $("#start-btn").attr("target","_blank");
                 }
             },
             error: function(e){
