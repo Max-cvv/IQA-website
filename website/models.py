@@ -32,6 +32,7 @@ class Managers(models.Model):
     user_password = models.CharField(max_length=30)
 
 class Question(models.Model):
+    user_id = models.IntegerField(blank=True,null=True)
     age = models.IntegerField()
     isGlasses = models.IntegerField()
     gender = models.IntegerField()

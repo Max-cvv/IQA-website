@@ -56,13 +56,14 @@
             <ul class="nav nav-sidebar">
               <li id = "manage_1" ><a href="/manage/1/">用户列表</a></li>
               <li id = "manage_2" ><a href="/manage/2/">操作记录</a></li>
+              <li id = "manage_3" ><a href="/manage/3/">问卷信息</a></li>
             </ul>
           </div>
             {% block body %}{% endblock %}
         </div>
     </div>
 
-<script>$("#logout").click(function(){showModal("提示", "测试", "确认", "/manage/logout/");})</script>
+<script>$("#logout").click(function(){showModal("提示", "要退出吗？", "确认", "/manage/logout/");})</script>
 {% block external_js %}{% endblock %}
 </body>
 </html>

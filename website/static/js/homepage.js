@@ -19,10 +19,15 @@ $(window).scroll(function() {
     scroll();
 });
 
+var cookies = $.cookie('user_check_code');
+if(cookies){
+    $("#my-form").hide();
+    $("#my-loading").hide();
+    $("#my-yanzhengma").html(cookies);
+    $("#my-loading-after").show();
+}
 
 $("#form-btn").click(function(){
-
-    
     
     
     var gender = $("[name = 'gender']:checked").val();
@@ -31,7 +36,13 @@ $("#form-btn").click(function(){
     var edu = $("[name = 'edu']:checked").val();
     var pho = $("[name = 'pho']:checked").val();
     var screen = $("#screen").val();
+    
+
     if(age && isGlasses && gender  && edu && pho){
+        $("#my-form").hide();
+        $("#my-loading").show();
+        
+        
         $.ajax({
             type:"post",
             url:"/hand_form/",
@@ -44,7 +55,10 @@ $("#form-btn").click(function(){
                 }
                 else{
                     //window.location ="/index/";
-                    window.open('/index/');
+                    //window.open('/index/');
+                    $("#my-loading").hide();
+                    $("#my-yanzhengma").html(msg.code);
+                    $("#my-loading-after").show();
                 }
             },
             error: function(e){
@@ -52,6 +66,7 @@ $("#form-btn").click(function(){
             }
 
         })
+        
     }
     else{
         showModal("提示", "请将必填项填写完整");

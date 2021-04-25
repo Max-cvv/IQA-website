@@ -1,0 +1,53 @@
+{% extends 'backend/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}管理后台{% endblock %}
+{% block external_header %}
+
+{% endblock %}
+{% block body %}
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">问卷信息</h1>
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>用户id</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>是否戴眼镜</th>
+                <th>教育背景</th>
+                <th>拍摄习惯</th>
+                <th>电脑屏幕</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for qa in qas %}
+              <tr>
+                <td>{{ qa.user_id }}</td>
+
+                
+                <td>{{ qa.gender }}</td>
+                <td>{{ qa.age }}</td>
+                <td>{{ qa.isGlasses }}</td>
+                <td>{{ qa.edu }}</td>
+                <td>{{ qa.pho }}</td>
+                <td>{{ qa.screen }}</td>
+              </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
+
+{% endblock %}
+
+{% block external_js %}
+<script>$("#manage_3").addClass("active")</script>
+{% endblock %}

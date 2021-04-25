@@ -9,11 +9,16 @@ from django.contrib.auth import logout
 from utils.utils import login_decorator
 # Create your views here.
 
+def generateCode(codeLength):
+    codeList = '0123456789QAZWSXEDCRFVTGBYHNUJMIKOLP'
+    code = ''
+    for i in range(codeLength):
+        code += random.choice(codeList)
+
+    return code
+
 def homepage(request):
-    if request.session.get('is_login',None):
-        return redirect(reverse('index'))
-    else:
-        return render(request,'wesite/homepage.html')
+    return render(request,'wesite/homepage.html')
 
 
 #homepage
@@ -26,16 +31,34 @@ def hand_form(request):
         isGlasses=request.POST.get('isGlasses')
         pho=request.POST.get('pho')
         screen=request.POST.get('screen')
-
-        qa = Question(age = age, gender = gender, edu = edu, isGlasses = isGlasses, pho = pho)
-        qa.save()
-        user = Users(login_time = datetime.datetime.now())
+        
+        #code = generateCode(6)
+        code = 'NLIEGG'
+        findUser = Users.objects.filter(check_list=code)
+        while findUser:
+            code = generateCode(6)
+            findUser = Users.objects.filter(check_list=code)
+        
+        
+        #获得需要评价的总数和具体条目
+        record_list = []
+        record_all = 30
+        user = Users(login_time = datetime.datetime.now(), check_list = code, record_now = 1, record_all = record_all)
         user.save()
 
-        request.session['is_login']=True   #认证为真
-        request.session['userID']=user.id
+        for i in range(1,record_all+1):
+            img = random.randint(1,58)
+            record = Records(user_id=user.id,user_record_id = i, img1=11000+img,img2=21000+img)
+            record.save()
 
-        return JsonResponse({'state':'ok', })
+        
+        qa = Question(user_id = user.id, age = age, gender = gender, edu = edu, isGlasses = isGlasses, pho = pho, screen = screen)
+        qa.save()
+        
+        response = JsonResponse({'state':'ok', 'code':code})
+        response.set_cookie("user_check_code", code, 60*60*24*7)
+
+        return response
     else:
         return JsonResponse({'state':'fail'})
 
@@ -43,7 +66,7 @@ def hand_form(request):
 
 #用户端
 def log_in(request):
-
+  
     if request.method=='GET':
         return render(request,'wesite/login.html')
     elif request.method=="POST":
@@ -85,21 +108,6 @@ def creatRecordList(request):
         user_find.screen_colorDepth = request.POST.get('screen_colorDepth')
         user_find.save()
 
-        if user_find.record_all:
-            pass
-        else:
-            #获得需要评价的总数和具体条目
-            record_list = []
-            record_all = 20
-
-            user_find.record_all = record_all
-            user_find.record_now = 1
-            user_find.save()
-
-            for i in range(1,record_all+1):
-                img = random.randint(1,58)
-                record = Records(user_id=user_id,user_record_id = i, img1=11000+img,img2=21000+img)
-                record.save()
 
         record_now = user_find.record_now
         record_all = user_find.record_all

@@ -148,7 +148,7 @@ viewers[1].addHandler( 'close', show_loading2);
 
 //操作教程
 var introduce_step = 1;
-var html_array = ['这是我们用不同型号手机拍摄的图片，请您选择您认为<span class = "tips"><strong>质量较好</strong></span>的一张。',
+var html_array = ['这是我们用不同型号手机拍摄的图片，请您选择您认为<span class = "tips"><strong>质量较好</strong></span>的一张。跳过或完成教程后，将进入<span class = "tips"><strong>正式实验环节。',
     '为查看更多细节，您可以使用鼠标对两张图片进行<span class = "tips"><strong>同步或不同步</strong></span>的<span class = "tips"><strong>放缩和拖动</strong></span>，点击<span class = "tips"><strong>复原</strong></span>获得初始状态。',
     '若无法判断，您可点击工具栏的<span class = "tips"><strong>跳过</strong></span>。',
     '当选择完成后，您可以通过键盘上的<span class = "tips"><strong>回车键</strong></span>或导航栏的下一组按钮来继续评价。点击完成将进入正式评价环节。'];
@@ -208,7 +208,6 @@ $("#my-checkbox").on('switchChange.bootstrapSwitch', function(event, state){
 });
 
 
-
 sync_tab(); 
 
 
@@ -249,6 +248,148 @@ $("#reset-img").click(function(){
 
 $("#reset-choice").click(resetChoice);
 
+
+
+
+
+
+
+function clickButton(){
+    if(check_right || check_left)
+    {
+        getRecords_Next();
+        resetChoice();
+    }
+    else{
+        showModalButton("提示", "您还未做出选择，若不对此组做出评价，点击确定按钮跳转到下一步，否则关闭此窗口");
+        $("#btnModal").click(getRecords_Next);
+    }
+}
+
+function getRecords_Next(){
+    viewers[0].close();
+    viewers[1].close();
+    var result = 0;
+    if(check_left){
+        result = 0;
+    }
+    else if(check_right){
+        result = 1;
+    }
+    else{
+        result = -1;
+    }
+
+    dataToPost = {result:result,operation:op1,operation_scroll:op2};
+
+    $.ajax({
+        type:"post",
+        url:"/record/",
+        //async : false,
+        data:dataToPost,
+        dataType:"json",
+        success:function(msg){
+            if(msg.state=='fail'){
+                alert("!");
+            }
+            else if(msg.state=='ok'){
+                D_1 = msg.device1;
+                D_2 = msg.device2;
+                CO_1 = msg.co1;
+                CO_2 = msg.co2;
+                pho1 = msg.photo_num1;
+                pho2 = msg.photo_num1;
+                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
+                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
+                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
+                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
+
+                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+                progress = msg.progress;
+                $(".progress-bar").css('width', (msg.progress)*100+'%');
+                if(msg.progress == 1){
+                    $("#li-nextimg").addClass("disabled");
+                    $("#nextimg").unbind("click");
+                    $("#start-btn").html("提交");
+                }
+            }
+            else{
+                window.location ="/";
+            }
+        },
+        error: function(e){
+            alert(e.responseText);
+        }
+
+       })
+
+    op1 = 0;
+    op2 = 0;
+ }
+
+
+ function initFirstImg(){
+
+    viewers[0].close();
+    viewers[1].close();
+    //同步之后再绑定下一步事件
+    $("#start-btn").unbind("click");
+    $("#nextimg").unbind("click");
+    
+    $("#start-btn").click(function(){
+
+        clickButton();
+        
+    })
+
+    $("#nextimg").click(function(){
+        resetChoice();
+        getRecords_Next();
+        
+    })
+
+    resetChoice();
+
+
+    $.ajax({
+        type:"post",
+        url:"/creatRecordList/",
+        //async : false,
+        data:{screen_width:screen.width,screen_height:screen.height,window_width:window.innerWidth,window_height:window.innerHeight,screen_colorDepth:screen.colorDepth},
+        dataType:"json",
+        success:function(msg){
+            if(msg.state=='fail'){
+                alert("creatRecordList fail!");
+            }
+            else{
+                D_1 = msg.device1;
+                D_2 = msg.device2;
+                CO_1 = msg.co1;
+                CO_2 = msg.co2;
+                pho1 = msg.photo_num1;
+                pho2 = msg.photo_num1;
+                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
+                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
+                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
+                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
+
+                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+
+                $(".progress-bar").css('width', (msg.progress)*100+'%');
+                if(msg.progress == 1){
+                    $("#li-nextimg").addClass("disabled");
+                    $("#nextimg").unbind("click");
+                    $("#start-btn").html("提交");
+                }
+            }
+        },
+        error: function(e){
+            alert(e.responseText);
+        }
+    });
+}
 
 function resetChoice(){
     check_right = false;
@@ -319,145 +460,6 @@ function get_tileSource(tileSource,viewer,xml_url,image_url)
         viewer.open(tileSource);
     }
    })
-}
-
-
-
-
-function clickButton(){
-    if(check_right || check_left)
-    {
-        getRecords_Next();
-        resetChoice();
-    }
-    else{
-        showModalButton("提示", "您还未做出选择，若不对此组做出评价，点击确定按钮跳转到下一步，否则关闭此窗口");
-        $("#btnModal").click(getRecords_Next);
-    }
-}
-
-function getRecords_Next(){
-    var result = 0;
-    if(check_left){
-        result = 0;
-    }
-    else if(check_right){
-        result = 1;
-    }
-    else{
-        result = -1;
-    }
-
-    dataToPost = {result:result,operation:op1,operation_scroll:op2};
-
-    $.ajax({
-        type:"post",
-        url:"/record/",
-        //async : false,
-        data:dataToPost,
-        dataType:"json",
-        success:function(msg){
-            if(msg.state=='fail'){
-                alert("!");
-            }
-            else if(msg.state=='ok'){
-                D_1 = msg.device1;
-                D_2 = msg.device2;
-                CO_1 = msg.co1;
-                CO_2 = msg.co2;
-                pho1 = msg.photo_num1;
-                pho2 = msg.photo_num1;
-                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
-                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
-                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
-                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
-
-                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
-                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
-                progress = msg.progress;
-                $(".progress-bar").css('width', (msg.progress)*100+'%');
-                if(msg.progress == 1){
-                    $("#start-btn").html("提交");
-                }
-            }
-            else{
-                window.location ="/";
-            }
-        },
-        error: function(e){
-            alert(e.responseText);
-        }
-
-       })
-
-    op1 = 0;
-    op2 = 0;
- }
-
-
- function initFirstImg(){
-
-    viewers[0].close();
-    viewers[1].close();
-    //同步之后再绑定下一步事件
-    $("#start-btn").unbind("click");
-    $("#nextimg").unbind("click");
-    
-    $("#start-btn").click(function(){
-
-        clickButton();
-        
-    })
-
-    $("#nextimg").click(function(){
-        resetChoice();
-        getRecords_Next();
-        
-    })
-
-    $('#label_right').removeClass("labelActive");
-    $('.openseadragon-container:last').removeClass("imgchosen");
-    $('#label_left').removeClass("labelActive");
-    $('.openseadragon-container:first').removeClass("imgchosen");
-    check_right = false;
-    check_left = false;
-
-
-    $.ajax({
-        type:"post",
-        url:"/creatRecordList/",
-        //async : false,
-        data:{screen_width:screen.width,screen_height:screen.height,window_width:window.innerWidth,window_height:window.innerHeight,screen_colorDepth:screen.colorDepth},
-        dataType:"json",
-        success:function(msg){
-            if(msg.state=='fail'){
-                alert("creatRecordList fail!");
-            }
-            else{
-                D_1 = msg.device1;
-                D_2 = msg.device2;
-                CO_1 = msg.co1;
-                CO_2 = msg.co2;
-                pho1 = msg.photo_num1;
-                pho2 = msg.photo_num1;
-                url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
-                url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
-                url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
-                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
-
-                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
-                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
-
-                $(".progress-bar").css('width', (msg.progress)*100+'%');
-                if(msg.progress == 1){
-                    $("#start-btn").html("提交");
-                }
-            }
-        },
-        error: function(e){
-            alert(e.responseText);
-        }
-    });
 }
 
 function sync_tab(){

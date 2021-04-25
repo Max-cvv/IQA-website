@@ -21,7 +21,7 @@
                 <th>选择结果</th>
                 <th>拖动操作</th>
                 <th>放缩操作</th>
-                <th>操作时间/秒</th>
+                <th>提交时间</th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -34,11 +34,15 @@
                 {% if record.result == 0 %}
                 <td>图片1</td>
                 {% else %}
+                {% if record.result == 1 %}
                 <td>图片2</td>
+                {% else %}
+                <td>未选择</td>
+                {% endif %}
                 {% endif %}
                 <td>{{ record.operation}}</td>
                 <td>{{ record.operation_scroll }}</td>
-                <td>{{ record.op_time }}</td>
+                <td>{{ record.submit_time }}</td>
                 <td><a href="/manage/record/delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
               </tr>
                 {% endfor %}

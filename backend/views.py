@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from website.models import Users, Records, Managers
+from website.models import Users, Records, Managers, Question
 from django.contrib.auth import logout
 from utils.utils import login_decorator
 # Create your views here.
@@ -27,6 +27,23 @@ def manager_login(request):
 def manager_users_list(request):
     user_find = Users.objects.all()
     return render(request, 'backend/manage_users_list.html', {'users_list':user_find})
+
+@login_decorator()
+def manager_question_list(request):
+    gender = ['男','女']
+    age = ['1-20岁', '20-30岁', '30-50岁', '50岁以上']
+    isGlasses = ['是','否']
+    edu = ['高中及以下', '本科或专科', '研究生', '博士及以上']
+    pho = ['经常', '一般', '很少', '几乎没有']
+
+    qas = Question.objects.all()
+    for qs in qas:
+        qs.gender = gender[int(qs.gender) -1]
+        qs.age = age[int(qs.age) -1]
+        qs.isGlasses = isGlasses[int(qs.isGlasses) -1]
+        qs.edu = edu[int(qs.edu) -1]
+        qs.pho = pho[int(qs.pho) -1]
+    return render(request, 'backend/manage_question_list.html', {'qas':qas})
 
 
 @login_decorator()

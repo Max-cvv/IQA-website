@@ -2,6 +2,16 @@
     color: rgb(0, 0, 0);
 }
 
+.navbar-brand{
+    position: relative;
+    background:url(../logo.png);
+    background-size:24px 24px;
+    background-repeat:no-repeat;
+    background-position: left 50%;
+    padding-left: 36px;
+}
+
+
 #start-btn{
     color: rgb(255, 255, 255);
     background-color: #337ab7;

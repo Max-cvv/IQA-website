@@ -6,9 +6,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>主页</title>
+    <title>手机拍摄质量主观评价平台</title>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -37,7 +38,7 @@
             <li><a href="#my-footer">Contact</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a  id = "start-btn" href="#start" role="button">Start Now!</a></li>
+            <li><a  id = "start-btn" href="/login/" target="_blank" role="button">Start Now!</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -48,18 +49,18 @@
         <div class="container">
           <h1 id = "my-h1"><strong>About us</strong></h1>
           <div class = "row">
-            <div class = "col-md-7 col-sm-7 col-xs-7" id = "my-maincontent">
+            <div class = "col-sm-7" id = "my-maincontent">
             
               <div class="my-homepage">
                   
                   <h3>随手拍照已经成为人们生活中的重要组成部分。</h3>
                   <p>图像所正在研究一个针对摄影器材的主观拍摄质量的评价方法，并且尝试提供市场上主流手机的拍摄质量评价排名。</p>
-                  <p>而这项工作的研究基础是构建手机拍摄照片质量<strong>主观评价数据库</strong>。我们制作了该网站开展心理学实验以获取图像主观评价数据。</p>
+                  <p>而这项工作的研究基础是构建手机拍摄照片质量<strong>主观评价数据库</strong>，因此我们制作了该网站开展心理学实验以获取图像主观评价数据。</p>
                   <p><span class="glyphicon glyphicon-menu-down"></span>照片质量主观评价数据库有如下用途。</p>
               </div>
             </div>
             
-            <div class = "col-md-5 col-sm-5 col-xs-5" id = "my-img">
+            <div class = "col-sm-5" id = "my-img">
               <img src = "{% static 'takePhoto.png' %}" style = "width: 100%;">
             </div>
           </div>
@@ -72,7 +73,7 @@
             <div class = "col-sm-3" style = "margin-left: 4%;">
               <div class = "my-content-style">
                 <h4>研究图像质量评价算法</h4>
-                <p>基于一个具有一定规模的图像质量评价数据库，可以更加充分的了解人眼视觉系统与图像质量之间的关系，帮助领域内的相关人员更好的研究图像质量算法，从而不断地改善现实生活中的图像质量。</p>
+                <p>基于具有一定规模的图像质量评价数据库，我们可以更加充分地了解人眼视觉系统与图像质量之间的关系，帮助领域内的相关人员更好地研究图像质量算法，从而不断地改善现实生活中的图像质量。</p>
               </div>
               
             </div>
@@ -83,7 +84,7 @@
             <div class = "col-sm-3 col-sm-offset-1">
               <div class = "my-content-style">
                 <h4>评价算法性能</h4>
-                <p>通过组织主观实验获取图像的主观质量，从而可以利用主客观质量的一致性来判断客观评价算法的性能。同时主观质量评价数据库可以作为基于机器学习的图像质量算法的训练数据。</p>
+                <p>通过组织主观实验获取的图像主观质量，可以用来与评价算法的评价结果进行对比，以判断算法的性能。同时主观质量评价数据库可以作为基于机器学习的图像质量算法的训练数据。</p>
               </div>
             </div>
           </div>
@@ -99,23 +100,27 @@
               <div class = "my-tips-style">
                 <p class = "tips-h">如何参与？</p>
                 <p>1.请您填写右侧的个人信息以帮助我们此次主观实验的信息采集，我们保证只会将其用于后续模型研究之中。</p>
-                <p>2.<span class = "label-star">填写完成后</span>点击问卷下方按钮，您将<span class = "label-star">自动跳转</span>到实验平台。</p>
-                <p>3.进入平台后将有操作指引您完成实验。建议您进入平台前将<span class = "label-star">浏览器最大化</span>。</p>
-                <p>4.若您不小心关闭实验平台，可以通过再次访问此页面恢复进程。</p>
+                <p>2.<span class = "label-star">填写完成后</span>点击问卷下方按钮，您将获得一个<span class = "label-star">验证码</span>。</p>
+                <p>3.点进网页右上角<span class = "label-star">Start Now</span>按钮，输入验证码后即可进入实验平台。<span class = "label-star">请您进入平台前将浏览器最大化并不再变动。</span></p>
+                <p>4.若您不小心关闭实验平台，可以通过验证码重新登入并恢复进程。</p>
               </div>
               <div class = "my-tips-style">
                 <p class = "tips-h">关于实验开展方式</p>
                 <p>1.针对本次图像主观评价实验，我们采用<span class = "label-star">两两比较</span>的方法以尽可能减少各种因素的干扰。</p>
-                <p>2.对于每一组图片，您只需要选择您认为更好的一张图。</p>
-                <p>3.评价的标准包括但不限于：照片的分辨率，色调真实度。但请您尽量关注于<span class = "label-star">照片本身质量</span>而不是图片内容。</p>
+                <p>2.对于每一组照片，您只需要选择您认为更好的一张。</p>
+                <p>3.评价的标准包括但不限于：照片的分辨率，色调真实度。但请您尽量关注于<span class = "label-star">照片本身质量</span>而不是照片内容。</p>
               </div>
 
             </div>
             <div class="col-sm-3">
-              <div id = "my-form-wrapper">
-
-              
-                <div id = "my-form">
+              <div id = "my-form-wrapper" >
+                <div id = "my-loading" style = "display: none;text-align: center;"><img src = "{% static '3.gif' %}" style = "height: 100%;" ></div>
+                <div id = "my-loading-after" style = "display: none;text-align: center;margin-top: 100px;">
+                  <div>您的验证码是：</div>
+                  <div id = "my-yanzhengma"></div>
+                  <div>复制后点击页面右上角"Start Now"按钮进入实验平台</div>
+                </div>
+                <div id = "my-form" >
                   <div class="form-group">
                     <label>1.您的性别<span class = "label-star">*</span></label> 
                     <div class="radio">
@@ -230,6 +235,7 @@
           </div>
         </div>
       </div>
+
     </div> <!-- /container -->
   
     <footer class="footer">

@@ -13,7 +13,7 @@ body{
     background-image: url(1.jpg);
     background-size: 100% 100%;
     */
-    background-color: #2892c4;
+    background-color: #eee;
 }
 a{
     position:absolute;
@@ -42,13 +42,13 @@ input{
     outline: none;
     padding: 10px;
     font-size: 13px;
-    color: #fff;
+    color: rgb(0, 0, 0);
     border-top: 1px solid #312E3D;
     border-left: 1px solid #312E3D;
     border-right: 1px solid #312E3D;
     border-bottom: 1px solid #56536A;
     border-radius: 4px;
-    background-color: #2D2D3F;
+    background-color: #ffffff;
 }   
 .but{   
     width: 100%;   
