@@ -48,17 +48,17 @@ def hand_form(request):
         #Tiaomu.objects.bulk_create(tiaomu_list)
         
         group = [(0,15), (15,30), (30, 45),(45,60), (60, 75), (75, 90), (90, 105)]
-        nightImg = [107,108,109,110,111,112,113,116,117,119,122,124,125,126,127,128,139,130,131,132,133,134,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161]
+        nightImg = [107,108,109,110,111,112,113,116,117,119,122,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161]
         random.shuffle(nightImg)
 
         group_id = user.id % len(group)
         tiaomuGet = Tiaomu.objects.all()[group[group_id][0]:group[group_id][1]]
 
-        record_all = 75
+        record_all = 60
         user.record_all = record_all
         user.save()
 
-        for i in range(1,61):
+        for i in range(1,46):
             D1 = random.randint(1,9)
             D2 = random.randint(1,9)
             while D1 ==D2:
@@ -67,7 +67,7 @@ def hand_form(request):
             record = Records(user_id=user.id,user_record_id = i, img1=D1*10000+2000+nightImg[i-1],img2=D2*10000+2000+nightImg[i-1])
             record.save()
 
-        i = 61
+        i = 46
         for couple in tiaomuGet:
             record = Records(user_id=user.id,user_record_id = i, img1=61000+couple.img1,img2=61000+couple.img2)
             record.save()
