@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from website.models import Users, Records, Question
+from website.models import Users, Records, Question ,Tiaomu
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -32,29 +32,52 @@ def hand_form(request):
         pho=request.POST.get('pho')
         screen=request.POST.get('screen')
         
-        #code = generateCode(6)
-        code = 'NLIEGG'
+        code = generateCode(6)
+        #code = 'NLIEGG'
         findUser = Users.objects.filter(check_list=code)
         while findUser:
             code = generateCode(6)
             findUser = Users.objects.filter(check_list=code)
         
-        
+        user = Users(login_time = datetime.datetime.now(), check_list = code, record_now = 1)
+        user.save()
         #获得需要评价的总数和具体条目
-        record_list = []
-        record_all = 30
-        user = Users(login_time = datetime.datetime.now(), check_list = code, record_now = 1, record_all = record_all)
+        #img_index = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26,  29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 51, 53, 54, 55, 56]
+        tiaomu1 = [(4, 14), (8, 9), (5, 12), (3, 13), (6, 10), (7, 11), (2, 12), (4, 13), (15, 16), (6, 11), (9, 10), (7, 13), (3, 15), (8, 14), (4, 10), (2, 7), (5, 15), (12, 16), (8, 13), (3, 9), (4, 16), (12, 15), (2, 9), (10, 14), (7, 16), (5, 9), (8, 15), (7, 14), (4, 9), (2, 16), (7, 12), (8, 11), (10, 13), (9, 16), (14, 15), (5, 6), (2, 11), (9, 15), (3, 12), (5, 10), (6, 9), (2, 3), (12, 13), (4, 6), (3, 7), (2, 5), (6, 15), (9, 11), (2, 10), (4, 5), (7, 15), (8, 10), (11, 14), (5, 7), (6, 12), (13, 14), (3, 8), (5, 11), (2, 13), (8, 12), (4, 11), (3, 10), (13, 15), (4, 8), (6, 14), (3, 16), (4, 15), (6, 13), (9, 12), (7, 10), (11, 13), (6, 8), (5, 16), (11, 12), (2, 15), (6, 7), (5, 13), (10, 11), (2, 4), (5, 14), (3, 6), (2, 8), (11, 16), (4, 7), (3, 14), (11, 15), (4, 12), (3, 5), (7, 8), (10, 12), (3, 11), (8, 16), (2, 14), (3, 4), (7, 9), (2, 6), (13, 16), (5, 8), (9, 14), (6, 16), (10, 15), (12, 14), (9, 13), (14, 16), (10, 16)]
+        tiaomu_list = [Tiaomu(img1 = i[0], img2 = i[1]) for i in tiaomu1]
+        Tiaomu.objects.bulk_create(tiaomu_list)
+        '''
+        group = [(0,73), (74,144), (145, 214),(215,284), (285, 354), (355, 424), (425, 494), (495, 564), (565, 634), (635, 704), (705, 774), (775, 844),(845, 914), (915, 984), (985, 1054), (1055, 1128)]
+        nightImg = [107,108,109,110,111,112,113,116,117,119,122,124,125,126,127,128,139,130,131,132,133,134,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161]
+        random.shuffle(nightImg)
+
+        group_id = user.id % len(group)
+        tiaomuGet = Tiaomu.objects.all()[group[group_id][0]:group[group_id][1]]
+
+        record_all = 30+len(tiaomuGet)
+        user.record_all = record_all
         user.save()
 
-        for i in range(1,record_all+1):
-            img = random.randint(1,58)
-            record = Records(user_id=user.id,user_record_id = i, img1=11000+img,img2=21000+img)
+        for i in range(1,31):
+            D1 = random.randint(1,9)
+            D2 = random.randint(1,9)
+            while D1 ==D2:
+                D2 = random.randint(1,9)
+
+            record = Records(user_id=user.id,user_record_id = i, img1=D1*10000+2000+nightImg[i-1],img2=D2*10000+2000+nightImg[i-1])
             record.save()
 
+        i = 31
+        for couple in tiaomuGet:
+            record = Records(user_id=user.id,user_record_id = i, img1=61000+couple.img1,img2=61000+couple.img2)
+            record.save()
+            if i == record_all:break
+            i = i+1
+
         
-        qa = Question(user_id = user.id, age = age, gender = gender, edu = edu, isGlasses = isGlasses, pho = pho, screen = screen)
+        qa = Question(user_id = user.id, age = age, gender = gender, edu = edu, isGlasses = isGlasses, pho = pho, screen = screen[0:30])
         qa.save()
-        
+        '''
         response = JsonResponse({'state':'ok', 'code':code})
         response.set_cookie("user_check_code", code, 60*60*24*7)
 
@@ -125,7 +148,7 @@ def creatRecordList(request):
         img1 = record.img1 % 1000
         img2 = record.img2 % 1000
         return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
-                'photo_num1':img1, 'photo_num1':img2, 'progress':progress})
+                'photo_num1':img1, 'photo_num2':img2, 'progress':progress})
     return JsonResponse({'state':'fail'})
 
 
@@ -157,7 +180,7 @@ def record(request):
             img1 = record.img1 % 1000
             img2 = record.img2 % 1000
             return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
-                    'photo_num1':img1, 'photo_num1':img2, 'progress':progress})
+                    'photo_num1':img1, 'photo_num2':img2, 'progress':progress})
         else:
             user_find.submit_time=datetime.datetime.now()
             user_find.save()

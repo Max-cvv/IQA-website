@@ -298,7 +298,7 @@ function getRecords_Next(){
                 CO_1 = msg.co1;
                 CO_2 = msg.co2;
                 pho1 = msg.photo_num1;
-                pho2 = msg.photo_num1;
+                pho2 = msg.photo_num2;
                 url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
                 url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
                 url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
@@ -368,7 +368,7 @@ function getRecords_Next(){
                 CO_1 = msg.co1;
                 CO_2 = msg.co2;
                 pho1 = msg.photo_num1;
-                pho2 = msg.photo_num1;
+                pho2 = msg.photo_num2;
                 url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
                 url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
                 url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
