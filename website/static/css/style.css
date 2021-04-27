@@ -232,3 +232,27 @@ div {
     margin-right: -6rem;
     color: #ccc;
 }
+
+.progress-bar{
+    border-radius: 5px;
+  }
+  
+  .progress{
+    background-color:transparent;
+    box-shadow:none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .my-col{
+    width: 40%;
+  }
+
+  #my-table{
+      margin-left: 30px;
+      margin-right: 30px;
+  }
+
+  #head-for-table{
+      text-align: center;
+  }

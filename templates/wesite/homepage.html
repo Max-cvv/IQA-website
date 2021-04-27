@@ -45,6 +45,45 @@
     </nav>
 
     <div class="main">
+      {% if after == 1%}
+      <div class="div0">
+        <div class="container">
+          <div id = "my-table">
+            <div id = "head-for-table">
+              <h1>感谢您的参与！</h1>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class = "my-col" >手机型号</th>
+                    <th>排名</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for rank in ranks %}
+                  <tr>
+                    <td class = "my-col">{{ rank.0 }}</td>
+                    <td><div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" {{rank.1}} >
+                          {{rank.2}}
+                        </div>
+                      </div>
+                    </td>
+
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <h4><span class = "glyphicon glyphicon-star"></span>以上是根据截至目前所有参与者数据生成的实时手机排名</h4>
+            <p>ps:当前手机型号还比较少，期待您的加入！</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
       <div class="div1">
         <div class="container">
           <h1 id = "my-h1"><strong>About us</strong></h1>

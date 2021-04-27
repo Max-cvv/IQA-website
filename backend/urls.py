@@ -10,6 +10,7 @@ urlpatterns = [
     path('1/', views.manager_users_list, name = 'manager_users_list'),
     path('2/', views.manager_records_list, name = 'manager_records_list'),
     path('3/', views.manager_question_list, name = 'manager_question_list'),
+    path('4/', views.get_rank, name = 'manager_question_list'),
 
     path('reset/<user_id>/', views.user_reset),
     path('delete/<user_id>/', views.user_delete),

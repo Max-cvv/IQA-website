@@ -103,3 +103,19 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+
+.progress-bar{
+  border-radius: 5px;
+}
+
+.progress{
+  background-color:transparent;
+  box-shadow:none;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.my-col{
+  width: 150px;
+}

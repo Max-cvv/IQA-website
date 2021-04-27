@@ -3,7 +3,43 @@ from django.urls import reverse
 from website.models import Users, Records, Managers, Question
 from django.contrib.auth import logout
 from utils.utils import login_decorator
+from utils.utils import compute_rank_scores,extract_pair_data
+
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
+name = ["小米6","华为畅享7plus","魅族16","华为nova2plus","红米k20pro","iphone11","iphone7","oppoR9s","oppoR9s"]
+color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
+#获得实时排名
+@login_decorator()
+def get_rank(request):
+    record_find = Records.objects.all()
+    data1 = []
+    for record in record_find:
+        D1 = int(record.img1/10000)
+        D2 = int(record.img2/10000)
+        CO1 = int((record.img1-D1*10000)/1000)
+        CO2 = int((record.img2-D2*10000)/1000)
+        img1 = record.img1 % 1000
+        img2 = record.img2 % 1000
+        result = record.result
+        if img1 == img2 and D1 != 8 and D2 != 8:#and dataGet[1] == 1:
+            
+
+            if result == 0:
+                data1.append((D1, D2))
+            if result == 1:
+                data1.append((D2, D1))
+    data_pair = extract_pair_data(data1)
+    ranks = compute_rank_scores(data_pair)
+    ranklist = []
+    i = 0
+    for rank in ranks:
+        ranklist.append([name[rank[0]-1], 'style = width:'+str(round(rank[1],2))+'%;'+color[i], str(round(rank[1],2))])
+        i+=1
+    return render(request, 'backend/manage_rank.html', {'ranks':ranklist})
+
+
+
 
 #管理端
 def manager_login(request):

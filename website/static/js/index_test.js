@@ -315,7 +315,7 @@ function getRecords_Next(){
                 }
             }
             else{
-                window.location ="/";
+                window.location ="/subbmit_success/";
             }
         },
         error: function(e){
