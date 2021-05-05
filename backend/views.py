@@ -84,7 +84,7 @@ def manager_question_list(request):
 
 @login_decorator()
 def manager_records_list(request):
-    record_find = Records.objects.all().order_by("user_id")
+    record_find = Records.objects.all()#.order_by("user_id")
     record_img = []
     for record in record_find:
         if record.op_time:
@@ -117,8 +117,9 @@ def user_reset(request, user_id):
 
 @login_decorator()
 def user_delete(request, user_id):
-    user_find = Users.objects.get(id = user_id)
-    user_find.delete()
+    Users.objects.get(id = user_id).delete()
+    Records.objects.filter(user_id = user_id).delete()
+    Question.objects.filter(user_id = user_id).delete()
     return redirect(reverse('manager_users_list'))
 
 @login_decorator()

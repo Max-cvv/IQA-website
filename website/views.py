@@ -70,7 +70,7 @@ def hand_form(request):
             code = generateCode(6)
             findUser = Users.objects.filter(check_list=code)
         
-        user = Users(login_time = datetime.datetime.now(), check_list = code, record_now = 1)
+        user = Users(check_list = code, record_now = 1)
         user.save()
         #获得需要评价的总数和具体条目
         #img_index = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26,  29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 51, 53, 54, 55, 56]

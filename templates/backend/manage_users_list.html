@@ -11,7 +11,7 @@
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
        
         <h1 class="page-header">用户列表</h1>
-
+<!--
         <form class="form-inline" method = "GET" action = "/manage/adduser/">
           <div class="form-group">
             <input type="text" class="form-control" name="name" placeholder="姓名">
@@ -21,7 +21,7 @@
           </div>
           <button type="submit" class="btn btn-primary">增加用户</button>
         </form>
-       
+--> 
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -48,7 +48,7 @@
                 <td>{{ user.submit_time }}</td>
                 <td>
                   <a href="/manage/reset/{{ user.id }}/" class="btn-sm btn-warning" role="button">重置</a>
-                  <a href="/manage/delete/{{ user.id }}/" class="btn-sm btn-danger" role="button">删除</a>
+                  <a href="/manage/delete/{{ user.id }}/" class="btn-sm btn-danger" role="button">清空数据</a>
                 </td>
               </tr>
                 {% endfor %}
