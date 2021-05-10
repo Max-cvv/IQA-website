@@ -10,6 +10,7 @@
 
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <h1 class="page-header">照片信息</h1>
+        {%if is_device == 1%}
         <ul class="nav nav-tabs">
           {% for device in devices %}
             <li role="presentation" id = "device{{device.id}}"><a href="/manage/0/?device={{device.id}}">{{device.name}}</a></li>
@@ -42,6 +43,9 @@
           {% endfor %}
           </div>
         </div>
+        {% else%}
+        <div>暂无照片</div>
+        {%endif%}
         
 
         <h1 class="page-header">设备信息</h1>

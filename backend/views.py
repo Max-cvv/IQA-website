@@ -92,6 +92,8 @@ def manager_login(request):
 def database(request):
 
     devices = Devices.objects.all()#.order_by("user_id")
+    if not devices:
+        return render(request, 'backend/manage_database.html', {'is_device':0})
     device_id = request.GET.get('device', 1)
 
     root_device = os.path.join(STATIC_ROOT,"D{}".format(device_id))
@@ -119,6 +121,7 @@ def database(request):
 
     co_id = request.GET.get('co_id', device_content[0])
     content = {}
+    content['is_device'] = 1
     content['devices'] = devices
     content['co'] = device_content
     content['device_id'] = device_id
