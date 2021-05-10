@@ -1,11 +1,14 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from django.urls import reverse
 from website.models import Users, Records, Managers, Question
 from django.contrib.auth import logout
-from utils.utils import login_decorator
-from utils.utils import compute_rank_scores,extract_pair_data
-
+from utils.utils import login_decorator, compute_rank_scores, extract_pair_data
+from io import BytesIO
+import xlwt
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
+
 # Create your views here.
 name = ["小米6","华为畅享7plus","魅族16","华为nova2plus","红米k20pro","iphone11","iphone7","oppoR9s","oppoR9s"]
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
@@ -39,7 +42,28 @@ def get_rank(request):
     return render(request, 'backend/manage_rank.html', {'ranks':ranklist})
 
 
-
+def excel(request):
+    
+    """导出excel表"""
+    # 创建工作簿
+    ws = xlwt.Workbook(encoding='utf-8')
+    # 添加第一页数据表
+    w = ws.add_sheet('sheet1') # 新建sheet（sheet的名称为"sheet1"）
+    # 写入表头
+    w.write(0, 0, u'地名')
+    w.write(0, 1, u'次数')
+    w.write(0, 2, u'经度')
+    w.write(0, 3, u'纬度')
+    
+    # 写出到IO
+    output = BytesIO()
+    ws.save(output)
+    # 重新定位到开始
+    output.seek(0)
+    response = HttpResponse(output.getvalue(), content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment;filename='+'test'+'.xls'
+    #response.write(output.getvalue())
+    return response
 
 #管理端
 def manager_login(request):
@@ -84,7 +108,11 @@ def manager_question_list(request):
 
 @login_decorator()
 def manager_records_list(request):
+    
     record_find = Records.objects.all()#.order_by("user_id")
+    #paginator = Paginator(record_find, 20)
+    #page_num = request.GET.get('page', 1)
+    #record_find_page = paginator.get_page(page_num)
     record_img = []
     for record in record_find:
         if record.op_time:

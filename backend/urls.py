@@ -12,6 +12,8 @@ urlpatterns = [
     path('3/', views.manager_question_list, name = 'manager_question_list'),
     path('4/', views.get_rank, name = 'manager_question_list'),
 
+    path('excel/', views.excel),
+
     path('reset/<user_id>/', views.user_reset),
     path('delete/<user_id>/', views.user_delete),
     path('adduser/', views.user_add),

@@ -19,6 +19,12 @@ class Users(models.Model):
 class Records(models.Model):
     user_id = models.IntegerField()
     user_record_id = models.IntegerField(blank=True,null=True)
+    device1 = models.IntegerField(blank=True,null=True)
+    device2 = models.IntegerField(blank=True,null=True)
+    co1 = models.IntegerField(blank=True,null=True)
+    co2 = models.IntegerField(blank=True,null=True)
+    img_num1 = models.IntegerField(blank=True,null=True)
+    img_num2 = models.IntegerField(blank=True,null=True)
     img1 = models.IntegerField()
     img2 = models.IntegerField()
     result = models.IntegerField(blank=True,null=True)

@@ -23,6 +23,8 @@
                 <th>放缩操作</th>
                 <th>提交时间</th>
                 <th>操作</th>
+                <th>图1</th>
+                <th>图2</th>
               </tr>
             </thead>
             <tbody>
@@ -44,6 +46,8 @@
                 <td>{{ record.operation_scroll }}</td>
                 <td>{{ record.submit_time }}</td>
                 <td><a href="/manage/record/delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
+                <td>D{{ record.device1 }}-CO{{ record.co1 }}-{{ record.img_num1 }}</td>
+                <td>D{{ record.device2 }}-CO{{ record.co2 }}-{{ record.img_num2 }}</td>
               </tr>
                 {% endfor %}
             </tbody>
