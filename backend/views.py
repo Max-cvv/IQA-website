@@ -1,14 +1,18 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from website.models import Users, Records, Managers, Question
+from website.models import Users, Records, Managers, Question, Devices
 from django.contrib.auth import logout
 from utils.utils import login_decorator, compute_rank_scores, extract_pair_data
 from io import BytesIO
 import xlwt
+import os
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
+
+from django.conf import settings
+STATIC_ROOT = os.path.join(settings.STATIC_ROOT, 'files/photo')
 # Create your views here.
 name = ["小米6","华为畅享7plus","魅族16","华为nova2plus","红米k20pro","iphone11","iphone7","oppoR9s","oppoR9s"]
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
@@ -18,12 +22,13 @@ def get_rank(request):
     record_find = Records.objects.all()
     data1 = []
     for record in record_find:
-        D1 = int(record.img1/10000)
-        D2 = int(record.img2/10000)
-        CO1 = int((record.img1-D1*10000)/1000)
-        CO2 = int((record.img2-D2*10000)/1000)
-        img1 = record.img1 % 1000
-        img2 = record.img2 % 1000
+        D1 = record.device1
+        D2 = record.device2
+        CO1 = record.co1
+        CO2 = record.co2
+        img1 = record.img_num1
+        img2 = record.img_num2
+        result = record.result
         result = record.result
         if img1 == img2 and D1 != 8 and D2 != 8:#and dataGet[1] == 1:
             
@@ -84,6 +89,61 @@ def manager_login(request):
     return render(request,'backend/manager_login.html')
 
 @login_decorator()
+def database(request):
+
+    devices = Devices.objects.all()#.order_by("user_id")
+    device_id = request.GET.get('device', 1)
+
+    root_device = os.path.join(STATIC_ROOT,"D{}".format(device_id))
+    device_content = os.listdir(root_device)
+
+    co_id = request.GET.get('co_id', device_content[0])
+    root_co = os.path.join(root_device,co_id)
+
+    i = 1
+    img_path_list = []
+    img_index = []
+    while True:
+        path_photo = os.path.join(root_co, '{}'.format(i))
+        if os.path.isdir(path_photo):
+            img_path_list.append("files/photo/D{}/{}/{}/7/0_0.jpg".format(device_id, co_id, i))
+            if i%6 == 0:
+                img_index.append(1)
+            else:
+                img_index.append(0)
+            i+=1
+        else:
+            break
+    
+    img_index[-1] = 0
+
+    co_id = request.GET.get('co_id', device_content[0])
+    content = {}
+    content['devices'] = devices
+    content['co'] = device_content
+    content['device_id'] = device_id
+    content['co_id'] = co_id
+    content['imgs'] = zip(img_path_list, img_index, [j for j in range(1,i)])
+
+    return render(request, 'backend/manage_database.html', content)
+
+@login_decorator()
+def device_add(request):
+    devices = Devices(name = request.GET.get('name'), resolution = request.GET.get('resolution'))
+    devices.save()
+    return redirect(reverse('manager_database'))
+
+@login_decorator()
+def full_img(request):
+    device = request.GET.get('device')
+    co = request.GET.get('co_id')
+    img = request.GET.get('img_num')
+
+    url_img = "files/photo/D{}/{}/{}/".format(device, co, img)
+    url_xml = "files/photo/D{}/{}/xml/{}.xml".format(device, co, img)
+    return render(request, 'backend/manage_full_img.html', {'device':device, 'co_id':co, 'url_img':url_img, 'url_xml':url_xml})
+
+@login_decorator()
 def manager_users_list(request):
     user_find = Users.objects.all()
     return render(request, 'backend/manage_users_list.html', {'users_list':user_find})
@@ -108,28 +168,11 @@ def manager_question_list(request):
 
 @login_decorator()
 def manager_records_list(request):
-    
     record_find = Records.objects.all()#.order_by("user_id")
     #paginator = Paginator(record_find, 20)
     #page_num = request.GET.get('page', 1)
     #record_find_page = paginator.get_page(page_num)
-    record_img = []
-    for record in record_find:
-        if record.op_time:
-            record.op_time = float(record.op_time)/1000
-        else:
-            record.op_time = 0
-        D1 = int(record.img1/10000)
-        D2 = int(record.img2/10000)
-        CO1 = int((record.img1-D1*10000)/1000)
-        CO2 = int((record.img2-D2*10000)/1000)
-        img1 = record.img1 % 1000
-        img2 = record.img2 % 1000
-        
-
-        dic = {'D1':D1, 'D2':D2, 'CO1':CO1, 'CO2':CO2, 'img1':img1, 'img2':img2}
-        record_img.append(dic)
-    return render(request, 'backend/manage_records_list.html', {'records_list':zip(record_find,record_img)})
+    return render(request, 'backend/manage_records_list.html', {'records_list':record_find})
 
 @login_decorator()
 def user_reset(request, user_id):

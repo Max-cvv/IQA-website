@@ -23,16 +23,14 @@
                 <th>放缩操作</th>
                 <th>提交时间</th>
                 <th>操作</th>
-                <th>图1</th>
-                <th>图2</th>
               </tr>
             </thead>
             <tbody>
-                {% for record,record_ in records_list %}
+                {% for record in records_list %}
               <tr>
                 <td>{{ record.user_id }}</td>
-                <td>D{{ record_.D1 }}-CO{{ record_.CO1 }}-{{ record_.img1 }}</td>
-                <td>D{{ record_.D2 }}-CO{{ record_.CO2 }}-{{ record_.img2 }}</td>
+                <td>D{{ record.device1 }}-CO{{ record.co1 }}-{{ record.img_num1 }}</td>
+                <td>D{{ record.device2 }}-CO{{ record.co2 }}-{{ record.img_num2 }}</td>
                 {% if record.result == 0 %}
                 <td>图片1</td>
                 {% else %}
@@ -46,8 +44,6 @@
                 <td>{{ record.operation_scroll }}</td>
                 <td>{{ record.submit_time }}</td>
                 <td><a href="/manage/record/delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
-                <td>D{{ record.device1 }}-CO{{ record.co1 }}-{{ record.img_num1 }}</td>
-                <td>D{{ record.device2 }}-CO{{ record.co2 }}-{{ record.img_num2 }}</td>
               </tr>
                 {% endfor %}
             </tbody>

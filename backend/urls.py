@@ -7,10 +7,15 @@ urlpatterns = [
     path('', views.manager_login, name = 'manager_login'),
     path('logout/', views.manage_logout, name = 'manager_logout'),
 
+    path('0/', views.database, name = 'manager_database'),
     path('1/', views.manager_users_list, name = 'manager_users_list'),
     path('2/', views.manager_records_list, name = 'manager_records_list'),
     path('3/', views.manager_question_list, name = 'manager_question_list'),
     path('4/', views.get_rank, name = 'manager_question_list'),
+
+
+    path('0/add_device/', views.device_add),
+    path('0/full_img/', views.full_img),
 
     path('excel/', views.excel),
 

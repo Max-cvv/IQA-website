@@ -25,8 +25,8 @@ class Records(models.Model):
     co2 = models.IntegerField(blank=True,null=True)
     img_num1 = models.IntegerField(blank=True,null=True)
     img_num2 = models.IntegerField(blank=True,null=True)
-    img1 = models.IntegerField()
-    img2 = models.IntegerField()
+    img1 = models.IntegerField(blank=True,null=True)
+    img2 = models.IntegerField(blank=True,null=True)
     result = models.IntegerField(blank=True,null=True)
     operation = models.IntegerField(blank=True,null=True)
     operation_scroll = models.IntegerField(blank=True,null=True)
@@ -50,3 +50,7 @@ class Tiaomu(models.Model):
     img1 = models.IntegerField(blank=True,null=True)
     img2 = models.IntegerField(blank=True,null=True)
     
+
+class Devices(models.Model):
+    name = models.CharField(max_length=30)
+    resolution = models.CharField(max_length=30)

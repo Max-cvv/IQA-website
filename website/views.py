@@ -28,12 +28,12 @@ def homepage_after(request):
     record_find = Records.objects.all()
     data1 = []
     for record in record_find:
-        D1 = int(record.img1/10000)
-        D2 = int(record.img2/10000)
-        CO1 = int((record.img1-D1*10000)/1000)
-        CO2 = int((record.img2-D2*10000)/1000)
-        img1 = record.img1 % 1000
-        img2 = record.img2 % 1000
+        D1 = record.device1
+        D2 = record.device2
+        CO1 = record.co1
+        CO2 = record.co2
+        img1 = record.img_num1
+        img2 = record.img_num2
         result = record.result
         if img1 == img2 and D1 != 8 and D2 != 8:#and dataGet[1] == 1:
             
@@ -95,12 +95,12 @@ def hand_form(request):
             while D1 ==D2:
                 D2 = random.randint(1,9)
 
-            record = Records(user_id=user.id,user_record_id = i, img1=D1*10000+2000+nightImg[i-1],img2=D2*10000+2000+nightImg[i-1])
+            record = Records(user_id=user.id,user_record_id = i, device1=D1, device2=D2, co1 = 2, co2 = 2, img_num1=nightImg[i-1],img_num2=nightImg[i-1])
             record.save()
 
         i = 46
         for couple in tiaomuGet:
-            record = Records(user_id=user.id,user_record_id = i, img1=61000+couple.img1,img2=61000+couple.img2)
+            record = Records(user_id=user.id,user_record_id = i, device1=6, device2=6, co1 = 1, co2 = 1,img_num1=couple.img1,img_num2=couple.img2)
             record.save()
             if i == record_all:break
             i = i+1
@@ -172,12 +172,12 @@ def creatRecordList(request):
 
         #获得当前要显示的两张图片
         record = Records.objects.get(user_id=user_id, user_record_id = record_now)
-        D1 = int(record.img1/10000)
-        D2 = int(record.img2/10000)
-        CO1 = int((record.img1-D1*10000)/1000)
-        CO2 = int((record.img2-D2*10000)/1000)
-        img1 = record.img1 % 1000
-        img2 = record.img2 % 1000
+        D1 = record.device1
+        D2 = record.device2
+        CO1 = record.co1
+        CO2 = record.co2
+        img1 = record.img_num1
+        img2 = record.img_num2
         return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
                 'photo_num1':img1, 'photo_num2':img2, 'progress':progress})
     return JsonResponse({'state':'fail'})
@@ -204,12 +204,12 @@ def record(request):
         if record_next <= record_all:
             record = Records.objects.get(user_id=user_id, user_record_id = record_next)
             progress = record_next/record_all
-            D1 = int(record.img1/10000)
-            D2 = int(record.img2/10000)
-            CO1 = int((record.img1-D1*10000)/1000)
-            CO2 = int((record.img2-D2*10000)/1000)
-            img1 = record.img1 % 1000
-            img2 = record.img2 % 1000
+            D1 = record.device1
+            D2 = record.device2
+            CO1 = record.co1
+            CO2 = record.co2
+            img1 = record.img_num1
+            img2 = record.img_num2
             return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
                     'photo_num1':img1, 'photo_num2':img2, 'progress':progress})
         else:

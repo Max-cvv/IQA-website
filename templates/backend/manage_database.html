@@ -1,0 +1,93 @@
+{% extends 'backend/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}管理后台{% endblock %}
+{% block external_header %}
+
+{% endblock %}
+{% block body %}
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">照片信息</h1>
+        <ul class="nav nav-tabs">
+          {% for device in devices %}
+            <li role="presentation" id = "device{{device.id}}"><a href="/manage/0/?device={{device.id}}">{{device.name}}</a></li>
+          {% endfor %}
+        </ul>
+        
+        <ul class="nav nav-tabs">
+          {% for c in co %}
+            <li role="presentation" id = {{c}}><a href="/manage/0/?device={{device_id}}&&co_id={{c}}">{{c}}</a></li>
+          {% endfor %}
+        </ul>
+        <div class = "container">
+          <div class="row" style="margin-top: 20px;">
+          {% for img,index,index_ in imgs %}
+          
+
+            <div class = "col-sm-2" style = "text-align: center;">
+              <a href="/manage/0/full_img/?device={{device_id}}&&co_id={{co_id}}&&img_num={{index_}}">
+                <img src = "{%static ''%}{{img}}">
+              </a>
+              <div>{{index_}}</div>
+            </div>
+
+            {% if index  == 1 %}
+            </div>
+            <div class="row" style="margin-top: 20px;">
+            {% endif %}
+          
+          
+          {% endfor %}
+          </div>
+        </div>
+        
+
+        <h1 class="page-header">设备信息</h1>
+
+        <form class="form-inline" method = "GET" action = "/manage/0/add_device/">
+            <div class="form-group">
+              <input type="text" class="form-control" name="name" placeholder="型号">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" name="resolution" placeholder="分辨率">
+            </div>
+            <button type="submit" class="btn btn-primary">增加设备信息</button>
+        </form>
+
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>设备id</th>
+                <th>型号</th>
+                <th>分辨率</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+              <tr>
+                <td>{{ device.id }}</td>
+
+                
+                <td>{{ device.name }}</td>
+                <td>{{ device.resolution }}</td>
+              </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        
+      </div>
+
+
+
+
+{% endblock %}
+
+{% block external_js %}
+<script>$("#manage_0").addClass("active");$("#device{{device_id}}").addClass("active");$("#{{co_id}}").addClass("active")</script>
+{% endblock %}

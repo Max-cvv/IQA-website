@@ -1,0 +1,87 @@
+{% extends 'backend/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}管理后台{% endblock %}
+{% block external_header %}
+<script src="{% static 'js/inc/openseadragon.min.js' %}"></script>
+{% endblock %}
+{% block body %}
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <a href="/manage/0/??device={{device}}&&co_id={{co_id}}"><span class = "glyphicon glyphicon-arrow-left"></span>返回</a>
+        <div class = "container">
+            <div  style="width: 70%;">
+                <div id = "img" style="width: 100%;"></div>
+            </div>
+            
+        </div>
+        
+      </div>
+
+
+
+
+{% endblock %}
+
+{% block external_js %}
+
+<script>$("#manage_0").addClass("active");</script>
+<script>
+    $("#img").height(($("#img").width()*3)/4);
+    var option = {
+    id:  "img",
+    prefixUrl: '{% static "files/images/" %}',
+    debugMode: false, //开启调试模式
+    //debugGridColor:'#1B9E77', //调试模式下网格的颜色
+    minZoomLevel: 0.5,  //最小允许放大倍数
+    showNavigator:false,
+    navigatorOpacity:1,
+    minPixelRatio:0.5,
+    minZoomImageRatio:0,
+    //controlsFadeDelay:100,
+    //controlsFadeLength:0,
+    showZoomControl:false,
+    showFullPageControl:false,
+    showHomeControl:false,
+    gestureSettingsMouse:{clickToZoom:false},
+}
+    tileSource = new OpenSeadragon.TileSource;
+    tileSource = {
+        Image: 
+        {
+            xmlns:  "http://schemas.microsoft.com/deepzoom/2009",
+            Url: '',
+            Overlap: "1",
+            TileSize: "256",
+            Format : "jpg",
+            Size:
+            {
+                Height: "",
+                Width:  "",
+            }
+        }
+    }
+    viewer = OpenSeadragon(option);
+    get_tileSource(tileSource,viewer, "{%static ''%}{{url_xml}}","{%static ''%}{{url_img}}")
+function get_tileSource(tileSource,viewer,xml_url,image_url)
+{
+    $.ajax({
+    type:"get",
+    url:xml_url,
+    data:{},
+    dataType:"xml",
+    success:function(data){
+        tileSource["Image"]["Overlap"]  = data.getElementsByTagName("Image")[0].getAttribute("Overlap");
+        tileSource["Image"]["TileSize"] = data.getElementsByTagName("Image")[0].getAttribute("TileSize");
+        tileSource["Image"]["Format"]   = data.getElementsByTagName("Image")[0].getAttribute("Format");
+        tileSource["Image"]["Size"]["Height"] = data.getElementsByTagName("Size")[0].getAttribute("Height");
+        tileSource["Image"]["Size"]["Width"]  = data.getElementsByTagName("Size")[0].getAttribute("Width");
+        tileSource["Image"]["Url"] = image_url;
+        viewer.open(tileSource);
+    }
+   })
+}
+
+</script>
+{% endblock %}
