@@ -4,6 +4,55 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
+import os
+
+import deepzoom
+import PIL.Image as Image
+import piexif
+import zipfile
+
+def transpose_img(path):
+    #img = Image.open(path)
+
+    #file_name, file_type = os.path.splitext(src_file.filename)
+    exif_dict = piexif.load(path)
+
+    flag = 1
+    if piexif.ImageIFD.Orientation in exif_dict["0th"]:
+        orientation = exif_dict["0th"].pop(piexif.ImageIFD.Orientation)
+        #print(orientation)
+        exif_bytes = piexif.dump(exif_dict)
+        if orientation == 1:
+            flag = 0
+        else:
+            img = Image.open(path)
+            if orientation == 2:
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 3:
+                img = img.rotate(180)
+            elif orientation == 4:
+                img = img.rotate(180).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 5:
+                img = img.rotate(-90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 6:
+                img = img.rotate(-90, expand=True)
+            elif orientation == 7:
+                img = img.rotate(90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 8:
+                img = img.rotate(90, expand=True)
+    if flag == 1:
+        #print(path)
+        img.save(path, quality=95, exif=exif_bytes)
+
+def unzip_file(src_file, dest_dir):
+    with open(src_file, 'rb') as src_file:
+        zip_file = zipfile.ZipFile(src_file)
+        for names in zip_file.namelist():
+            zip_file.extract(names, dest_dir)
+        zip_file.close()
+
+
+
 #装饰器函数
 def login_decorator(session_item = 'is_login_manager', redirect_url = 'manager_login'):
     def decorator(func):

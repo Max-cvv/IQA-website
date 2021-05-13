@@ -13,6 +13,7 @@ from django.core.paginator import Paginator
 
 from django.conf import settings
 STATIC_ROOT = os.path.join(settings.STATIC_ROOT, 'files/photo')
+num_progress = 0
 # Create your views here.
 name = ["小米6","华为畅享7plus","魅族16","华为nova2plus","红米k20pro","iphone11","iphone7","oppoR9s","oppoR9s"]
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
@@ -155,12 +156,27 @@ def upload(request):
     file_path = settings.STATIC_ROOT
     #if not os.path.exists(file_path):               # 文件夹不存在则创建
     #    os.mkdir(file_path)
+
+    global num_progress
+    process = len(list(file.chunks()))
     j = 0
     with open(os.path.join(file_path,name),'wb') as fp:    # 写文件
         for i in file.chunks():
             fp.write(i)
             j+=1
-    return JsonResponse({'status':True,'msg':'ok', 'n':len(list(file.chunks())), 'p':j})
+            num_progress = j/process
+    return JsonResponse({'status':True,'msg':'ok'})
+
+
+def process(request):
+    status = request.GET.get('status', 0)
+    global num_progress
+    if int(status) == 0:
+        num_progress = 0
+        return JsonResponse(num_progress, safe =False)
+    else:
+        return JsonResponse({'process':round(num_progress, 2), 'text':'{}%'.format(round(100*num_progress, 2))})
+
 
 
 @login_decorator()
