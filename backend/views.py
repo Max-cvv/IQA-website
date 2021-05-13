@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from website.models import Users, Records, Managers, Question, Devices
 from django.contrib.auth import logout
@@ -145,6 +145,23 @@ def full_img(request):
     url_img = "files/photo/D{}/{}/{}/".format(device, co, img)
     url_xml = "files/photo/D{}/{}/xml/{}.xml".format(device, co, img)
     return render(request, 'backend/manage_full_img.html', {'device':device, 'co_id':co, 'url_img':url_img, 'url_xml':url_xml})
+
+@csrf_exempt
+def upload(request):
+    file = request.FILES.get('file',None)
+    name = request.FILES['file'].name
+    co_num = request.POST.get('num','1')
+
+    file_path = settings.STATIC_ROOT
+    #if not os.path.exists(file_path):               # 文件夹不存在则创建
+    #    os.mkdir(file_path)
+    j = 0
+    with open(os.path.join(file_path,name),'wb') as fp:    # 写文件
+        for i in file.chunks():
+            fp.write(i)
+            j+=1
+    return JsonResponse({'status':True,'msg':'ok', 'n':len(list(file.chunks())), 'p':j})
+
 
 @login_decorator()
 def manager_users_list(request):

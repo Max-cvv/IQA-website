@@ -16,6 +16,7 @@ urlpatterns = [
 
     path('0/add_device/', views.device_add),
     path('0/full_img/', views.full_img),
+    path('0/upload/', views.upload, name = 'upload'),
 
     path('excel/', views.excel),
 

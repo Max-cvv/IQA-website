@@ -22,6 +22,16 @@
             <li role="presentation" id = {{c}}><a href="/manage/0/?device={{device_id}}&&co_id={{c}}">{{c}}</a></li>
           {% endfor %}
         </ul>
+        <form class="form-inline" style="margin-top: 5px;"> 
+          <div class="form-group">
+            <label for="co-num">上传至co</label>
+            <input type="text" class="form-control" id="co-num" placeholder="填写数字">
+          </div>
+          <div class="form-group">
+            <input type="file" accept=".zip" id="File">
+          </div>
+          <button type="submit" class="btn btn-default" onclick="up_file()">上传</button>
+        </form>
         <div class = "container">
           <div class="row" style="margin-top: 20px;">
           {% for img,index,index_ in imgs %}
@@ -94,4 +104,37 @@
 
 {% block external_js %}
 <script>$("#manage_0").addClass("active");$("#device{{device_id}}").addClass("active");$("#{{co_id}}").addClass("active")</script>
+<script>
+  function up_file() {
+    // 获取文件
+    var formdata = new FormData();
+    var files = $('#File')[0].files[0];   // 文件list
+    var text = $('#co-num').val();
+    if(!files){
+        alert('请选择文件上传！')
+        return
+    }
+    if(!text){
+        alert('请填写数字！')
+        return
+    }
+    formdata.append('file',files);
+    formdata.append('num',text)
+    $.ajax({
+        url:'{% url "upload" %}',
+        type:'POST',
+        cache: false,
+        data: formdata,
+        processData: false,
+        contentType: false,
+        success:function (data) {
+            if(data.status){
+                alert(data.p)
+            }else{
+                alert(data.msg)
+            }
+        }
+    })
+}
+</script>
 {% endblock %}
