@@ -28,9 +28,9 @@
             <input type="text" class="form-control" id="co-num" placeholder="填写数字">
           </div>
           <div class="form-group">
-            <input type="file" accept=".zip" id="File">
+            <input id = 'fileupload' name = 'file' type="file" accept=".zip" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
           </div>
-          <button id = "btn-form" type="submit" class="btn btn-default">上传</button>
+          <button id = "btn-form" type="submit" class="btn btn-default" >上传</button>
         </form>
 
         
@@ -70,7 +70,7 @@
             <div class="form-group">
               <input type="text" class="form-control" name="resolution" placeholder="分辨率">
             </div>
-            <button type="submit" class="btn btn-primary">增加设备信息</button>
+            <button id = "btn-form" type="submit" class="btn btn-primary">增加设备信息</button>
         </form>
 
 
@@ -108,11 +108,27 @@
 {% block external_js %}
 <script>$("#manage_0").addClass("active");$("#device{{device_id}}").addClass("active");$("#{{co_id}}").addClass("active")</script>
 <script>
+  var xhrOnProgress=function(fun) {
+      xhrOnProgress.onprogress = fun; //绑定监听
+      //使用闭包实现监听绑
+      return function() {
+        //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+        var xhr = $.ajaxSettings.xhr();
+        //判断监听函数是否为函数
+        if (typeof xhrOnProgress.onprogress !== 'function')
+          return xhr;
+        //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+        if (xhrOnProgress.onprogress && xhr.upload) {
+          xhr.upload.onprogress = xhrOnProgress.onprogress;
+        }
+        return xhr;
+      }
+}
   $('#btn-form').click(function(e){
     e.preventDefault();
   
     var formdata = new FormData();
-    var files = $('#File')[0].files[0];   // 文件list
+    var files = $('#fileupload')[0].files[0];   // 文件list
     var text = $('#co-num').val();
     if(!files){
         alert('请选择文件上传！')
@@ -126,26 +142,26 @@
     formdata.append('num',text)
     var html = '<div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div>';
     showModal('正在上传', html);
-    var myajax = $.getJSON('/manage/0/process/?status=0', function(msg){alert(msg)});
+    var myajax = $.getJSON('/manage/0/process/?status=0', function(msg){});
 
     $.when(myajax).done(function () {
           //要执行的操作
-        
 
     var sitv = setInterval(function(){
 
     var prog_url = '{% url "process" %}?status=1'              // prog_url指请求进度的url，后面会在django中设置
     $.getJSON(prog_url, function(msg){
-      console.log(msg);
-      $(".progress-bar").css('width', msg.process+'%');
-      $('.progress-bar').text(msg.text);
-         if(msg.process == 100){
-           clearInterval(sitv);
-           $('.progress-bar').css('width', '100%');
-           
-      //     $('.progress-bar').text('100%');
-       }
-
+      //console.log(msg);
+      if(msg.status == 1){
+        $('.modal-title').html('正在处理');
+        $(".progress-bar").css('width', msg.process+'%');
+        $('.progress-bar').text(msg.text);
+        if(msg.process == 100){
+          clearInterval(sitv);
+          $('.progress-bar').css('width', '100%');   
+          $('.progress-bar').text('100%');
+        }
+      }
     });
 
 
@@ -160,11 +176,17 @@
         contentType: false,
         success:function (data) {
             if(data.status){
-              
+              $('.modal-title').html('成功，请刷新页面！');
             }else{
-                alert(data.msg)
+              alert(data.msg)
             }
-        }
+        },
+        xhr:xhrOnProgress(function(e){
+                      var progress=parseInt(e.loaded/e.total * 100, 10);//文件上传百分比
+                      var strProgress = progress + "%";
+                      $('.progress-bar').css('width', strProgress);   
+                      $('.progress-bar').text(strProgress);
+                   }),
     })
   });
   })

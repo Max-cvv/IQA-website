@@ -58,7 +58,9 @@ def excel(request):
     # 写入表头
     w.write(0, 0, u'设备id')
     w.write(0, 1, u'手机型号')
+    w.col(1).width = 256*20
     w.write(0, 2, u'分辨率')
+    w.col(2).width = 256*10
     devices = Devices.objects.all().order_by('id')
     i = 1
     for device in devices:
@@ -115,6 +117,8 @@ def excel(request):
     w.write(0, 5, u'拖动操作')
     w.write(0, 6, u'放缩操作')
     w.write(0, 7, u'提交时间')
+    w.col(2).width = 256*15
+    w.col(3).width = 256*15
     record_find = Records.objects.all()
     i = 1
     
@@ -227,12 +231,18 @@ def full_img(request):
 @csrf_exempt
 def upload(request):
     file = request.FILES.get('file',None)
+    if not file:
+        return JsonResponse({'status':False,'msg':'ok'})
     name = request.FILES['file'].name
     co_num = request.POST.get('num','1')
 
-    file_path = settings.STATIC_ROOT
+    file_path = os.path.join(settings.STATIC_ROOT, 'upload')
     #if not os.path.exists(file_path):               # 文件夹不存在则创建
     #    os.mkdir(file_path)
+
+    process_get = Process.objects.all().order_by('id').last()
+    process_get.status = 1
+    process_get.save()
 
     global num_progress
     process_all_num = len(list(file.chunks()))
@@ -258,7 +268,7 @@ def process(request):
         return JsonResponse(process_get.process, safe =False)
     else:
         process_get = Process.objects.all().order_by('id').last()
-        return JsonResponse({'process':process_get.process, 'text':'{}%'.format(process_get.process)})
+        return JsonResponse({'status': process_get.status, 'process':process_get.process, 'text':'{}%'.format(process_get.process)})
 
 
 
