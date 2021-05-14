@@ -54,3 +54,7 @@ class Tiaomu(models.Model):
 class Devices(models.Model):
     name = models.CharField(max_length=30)
     resolution = models.CharField(max_length=30)
+
+class Process(models.Model):
+    process = models.IntegerField(blank=True,null=True)
+    status = models.IntegerField(blank=True,null=True)

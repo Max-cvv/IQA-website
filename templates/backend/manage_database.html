@@ -33,11 +33,7 @@
           <button id = "btn-form" type="submit" class="btn btn-default">上传</button>
         </form>
 
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-            
-          </div>
-        </div>
+        
 
         <div class = "container">
           <div class="row" style="margin-top: 20px;">
@@ -128,7 +124,8 @@
     }
     formdata.append('file',files);
     formdata.append('num',text)
-
+    var html = '<div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div>';
+    showModal('正在上传', html);
     var myajax = $.getJSON('/manage/0/process/?status=0', function(msg){alert(msg)});
 
     $.when(myajax).done(function () {
@@ -140,13 +137,12 @@
     var prog_url = '{% url "process" %}?status=1'              // prog_url指请求进度的url，后面会在django中设置
     $.getJSON(prog_url, function(msg){
       console.log(msg);
-      $(".progress-bar").css('width', msg.process*100+'%');
+      $(".progress-bar").css('width', msg.process+'%');
       $('.progress-bar').text(msg.text);
-         if(msg.process == 1){
+         if(msg.process == 100){
            clearInterval(sitv);
            $('.progress-bar').css('width', '100%');
            
-           showModal('提示', '上传成功');
       //     $('.progress-bar').text('100%');
        }
 

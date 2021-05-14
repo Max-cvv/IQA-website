@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from website.models import Users, Records, Managers, Question, Devices
+from website.models import Users, Records, Managers, Question, Devices, Process
 from django.contrib.auth import logout
 from utils.utils import login_decorator, compute_rank_scores, extract_pair_data
 from io import BytesIO
@@ -158,24 +158,30 @@ def upload(request):
     #    os.mkdir(file_path)
 
     global num_progress
-    process = len(list(file.chunks()))
+    process_all_num = len(list(file.chunks()))
     j = 0
     with open(os.path.join(file_path,name),'wb') as fp:    # 写文件
         for i in file.chunks():
             fp.write(i)
             j+=1
-            num_progress = j/process
+            #num_progress = j/process
+            process_get = Process.objects.all().order_by('id').last()
+            process_get.process = int(j*100/process_all_num)
+            process_get.save()
     return JsonResponse({'status':True,'msg':'ok'})
 
 
 def process(request):
     status = request.GET.get('status', 0)
-    global num_progress
+    #global num_progress
     if int(status) == 0:
         num_progress = 0
-        return JsonResponse(num_progress, safe =False)
+        process_get = Process(process = 0, status = 0)
+        process_get.save()
+        return JsonResponse(process_get.process, safe =False)
     else:
-        return JsonResponse({'process':round(num_progress, 2), 'text':'{}%'.format(round(100*num_progress, 2))})
+        process_get = Process.objects.all().order_by('id').last()
+        return JsonResponse({'process':process_get.process, 'text':'{}%'.format(process_get.process)})
 
 
 
