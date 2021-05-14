@@ -58,3 +58,6 @@ class Devices(models.Model):
 class Process(models.Model):
     process = models.IntegerField(blank=True,null=True)
     status = models.IntegerField(blank=True,null=True)
+
+class Lab(models.Model):
+    status = models.IntegerField(blank=True,null=True)

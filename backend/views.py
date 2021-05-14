@@ -54,12 +54,89 @@ def excel(request):
     # 创建工作簿
     ws = xlwt.Workbook(encoding='utf-8')
     # 添加第一页数据表
-    w = ws.add_sheet('sheet1') # 新建sheet（sheet的名称为"sheet1"）
+    w = ws.add_sheet('设备信息') # 新建sheet（sheet的名称为"sheet1"）
     # 写入表头
-    w.write(0, 0, u'地名')
-    w.write(0, 1, u'次数')
-    w.write(0, 2, u'经度')
-    w.write(0, 3, u'纬度')
+    w.write(0, 0, u'设备id')
+    w.write(0, 1, u'手机型号')
+    w.write(0, 2, u'分辨率')
+    devices = Devices.objects.all().order_by('id')
+    i = 1
+    for device in devices:
+        w.write(i, 0, 'D{}'.format(device.id))
+        w.write(i, 1, device.name)
+        w.write(i, 2, device.resolution)
+        i+=1
+
+    # 添加第二页数据表
+    w = ws.add_sheet('用户信息') # 新建sheet（sheet的名称为"sheet1"）
+    # 写入表头
+    w.write(0, 0, u'用户id')
+    w.write(0, 1, u'屏幕分辨率')
+    w.write(0, 2, u'窗口大小')
+    w.write(0, 3, u'登录时间')
+    w.write(0, 4, u'提交时间')
+    w.write(0, 5, u'年龄')
+    w.write(0, 6, u'性别')
+    w.write(0, 7, u'是否戴眼镜')
+    w.write(0, 8, u'拍摄习惯')
+    w.write(0, 9, u'教育背景')
+    users = Users.objects.all().order_by('id')
+    i = 1
+    gender = ['男','女']
+    age = ['1-20岁', '20-30岁', '30-50岁', '50岁以上']
+    isGlasses = ['是','否']
+    edu = ['高中及以下', '本科或专科', '研究生', '博士及以上']
+    pho = ['经常', '一般', '很少', '几乎没有']
+    for user in users:
+        w.write(i, 0, user.id)
+        w.write(i, 1, '{}*{}'.format(user.screen_width, user.screen_height))
+        w.write(i, 2, '{}*{}'.format(user.window_width, user.window_height))
+        w.write(i, 3, '{}'.format(user.login_time))
+        w.write(i, 4, '{}'.format(user.submit_time))
+       
+
+        qs = Question.objects.get(user_id = user.id)
+        
+        w.write(i, 5, age[int(qs.age) -1])
+        w.write(i, 6, gender[int(qs.gender) -1])
+        w.write(i, 7, isGlasses[int(qs.isGlasses) -1])
+        w.write(i, 8, pho[int(qs.pho) -1])
+        w.write(i, 9, edu[int(qs.edu) -1])
+        i+=1
+
+    # 添加第三页数据表
+    w = ws.add_sheet('操作记录') # 新建sheet（sheet的名称为"sheet1"）
+    # 写入表头
+    w.write(0, 0, u'记录id')
+    w.write(0, 1, u'用户id')
+    w.write(0, 2, u'图片1')
+    w.write(0, 3, u'图片2')
+    w.write(0, 4, u'选择结果')
+    w.write(0, 5, u'拖动操作')
+    w.write(0, 6, u'放缩操作')
+    w.write(0, 7, u'提交时间')
+    record_find = Records.objects.all()
+    i = 1
+    
+    for record in record_find:
+        w.write(i, 0, record.id)
+        w.write(i, 1, record.user_id)
+        w.write(i, 2, 'D{}-CO{}-{}'.format(record.device1, record.co1, record.img_num1))
+        w.write(i, 3, 'D{}-CO{}-{}'.format(record.device2, record.co2, record.img_num2))
+        if record.result == 0:
+            w.write(i, 4, 1)
+        elif record.result == 1:
+            w.write(i, 4, 2)
+        else:
+            w.write(i, 4, 0)
+        
+        w.write(i, 5, record.operation)
+        w.write(i, 6, record.operation_scroll)
+        w.write(i, 7, '{}'.format(record.submit_time))
+        i+=1
+
+
+    
     
     # 写出到IO
     output = BytesIO()
@@ -67,7 +144,7 @@ def excel(request):
     # 重新定位到开始
     output.seek(0)
     response = HttpResponse(output.getvalue(), content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment;filename='+'test'+'.xls'
+    response['Content-Disposition'] = 'attachment;filename='+'database'+'.xls'
     #response.write(output.getvalue())
     return response
 
@@ -216,17 +293,7 @@ def manager_records_list(request):
     #record_find_page = paginator.get_page(page_num)
     return render(request, 'backend/manage_records_list.html', {'records_list':record_find})
 
-@login_decorator()
-def user_reset(request, user_id):
-    user_find = Users.objects.get(id = user_id)
-    user_find.screen_width = None
-    user_find.screen_height = None
-    user_find.window_width = None
-    user_find.window_height = None
-    user_find.login_time = None
-    user_find.submit_time = None
-    user_find.save()
-    return redirect(reverse('manager_users_list'))
+
 
 @login_decorator()
 def user_delete(request, user_id):

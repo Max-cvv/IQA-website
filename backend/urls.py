@@ -21,7 +21,6 @@ urlpatterns = [
 
     path('excel/', views.excel),
 
-    path('reset/<user_id>/', views.user_reset),
     path('delete/<user_id>/', views.user_delete),
     path('adduser/', views.user_add),
     path('record/delete/<record_id>/', views.record_delete),
