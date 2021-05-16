@@ -3,10 +3,11 @@ from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from website.models import Users, Records, Managers, Question, Devices, Process
 from django.contrib.auth import logout
-from utils.utils import login_decorator, compute_rank_scores, extract_pair_data
+from utils.utils import login_decorator, compute_rank_scores, extract_pair_data, unzip_file, transpose_img
 from io import BytesIO
 import xlwt
 import os
+import deepzoom
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
@@ -234,9 +235,10 @@ def upload(request):
     if not file:
         return JsonResponse({'status':False,'msg':'ok'})
     name = request.FILES['file'].name
-    co_num = request.POST.get('num','1')
+    device_num = request.POST.get('device_num','1')
+    co_num = request.POST.get('co_num','1')
 
-    file_path = os.path.join(settings.STATIC_ROOT, 'upload')
+    file_path = os.path.join(settings.STATIC_ROOT, 'upload', name)
     #if not os.path.exists(file_path):               # 文件夹不存在则创建
     #    os.mkdir(file_path)
 
@@ -244,17 +246,63 @@ def upload(request):
     process_get.status = 1
     process_get.save()
 
-    global num_progress
+    
     process_all_num = len(list(file.chunks()))
     j = 0
-    with open(os.path.join(file_path,name),'wb') as fp:    # 写文件
+
+    with open(file_path,'wb') as fp:    # 写文件
         for i in file.chunks():
             fp.write(i)
             j+=1
             #num_progress = j/process
             process_get = Process.objects.all().order_by('id').last()
-            process_get.process = int(j*100/process_all_num)
+            process_get.process = int((j*100/process_all_num)/2)
             process_get.save()
+    
+    #处理为deepzoom
+    photo_path = os.path.join(settings.STATIC_ROOT, 'upload', 'photo')
+    isExists = os.path.exists(photo_path)
+    if not isExists:
+        os.makedirs(photo_path)
+
+    
+    unzip_file(file_path, photo_path)
+    photo_list = os.listdir(photo_path)
+    photo_list.sort(key=lambda x: int(os.path.splitext(x)[0]))
+
+    process_all_num = len(photo_list)
+    j = 0
+
+    creator = deepzoom.ImageCreator(
+        tile_size=256,
+        tile_overlap=1,
+        tile_format="jpg",
+        image_quality=1,
+        #resize_filter="bicubic",
+        #resize_filter="nearest",
+    )
+
+    for photo in photo_list:
+        photo_src = os.path.join(photo_path, photo)
+        transpose_img(photo_src)
+        root_path = os.path.join(STATIC_ROOT,"D{}/co{}".format(device_num, co_num))
+        
+        xml_path = os.path.join(root_path, 'xml')
+        isExists = os.path.exists(xml_path)
+        if not isExists:
+            os.makedirs(xml_path)
+
+        
+        photo_num =os.path.splitext(photo)[0]
+        photo_dest = os.path.join(root_path, photo_num)
+        xml_dest = os.path.join(xml_path, '{}.xml'.format(photo_num))
+        creator.create(photo_src, photo_dest, xml_dest)
+        j+=1
+        #num_progress = j/process
+        process_get = Process.objects.all().order_by('id').last()
+        process_get.process = 50 + int((j*100/process_all_num)/2)
+        process_get.save()
+
     return JsonResponse({'status':True,'msg':'ok'})
 
 
