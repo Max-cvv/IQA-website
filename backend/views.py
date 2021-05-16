@@ -231,6 +231,7 @@ def full_img(request):
 
 @csrf_exempt
 def upload(request):
+    #由于上传文件很大，处理时间长，需要配置nginx最大上传和响应时间
     file = request.FILES.get('file',None)
     if not file:
         return JsonResponse({'status':False,'msg':'ok'})
@@ -267,6 +268,7 @@ def upload(request):
 
     
     unzip_file(file_path, photo_path)
+    os.remove(file_path)
     photo_list = os.listdir(photo_path)
     photo_list.sort(key=lambda x: int(os.path.splitext(x)[0]))
 
@@ -302,6 +304,7 @@ def upload(request):
         process_get = Process.objects.all().order_by('id').last()
         process_get.process = 50 + int((j*100/process_all_num)/2)
         process_get.save()
+    os.remove(photo_path)
 
     return JsonResponse({'status':True,'msg':'ok'})
 
