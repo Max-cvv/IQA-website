@@ -22,22 +22,6 @@
             <li role="presentation" id = {{c}}><a href="/manage/0/?device={{device_id}}&&co_id={{c}}">{{c}}</a></li>
           {% endfor %}
         </ul>
-        <form class="form-inline" style="margin-top: 5px;"> 
-          <div class="form-group">
-            <label for="co-num">上传至D</label>
-            <input type="text" class="form-control" id="device-num" placeholder="填写数字">
-          </div>
-          <div class="form-group">
-            <label for="co-num">co</label>
-            <input type="text" class="form-control" id="co-num" placeholder="填写数字">
-          </div>
-          <div class="form-group">
-            <input id = 'fileupload' name = 'file' type="file" accept=".zip" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
-          </div>
-          <button id = "btn-form" type="submit" class="btn btn-default" >上传</button>
-        </form>
-
-        
 
         <div class = "container">
           <div class="row" style="margin-top: 20px;">
@@ -74,7 +58,7 @@
             <div class="form-group">
               <input type="text" class="form-control" name="resolution" placeholder="分辨率">
             </div>
-            <button id = "btn-form" type="submit" class="btn btn-primary">增加设备信息</button>
+            <button id = "btn-form-device" type="submit" class="btn btn-primary">增加设备信息</button>
         </form>
 
 
@@ -101,6 +85,21 @@
           </table>
         </div>
 
+        <h1 class="page-header">上传照片</h1>
+        <form class="form-inline" style="margin-top: 5px;"> 
+          <div class="form-group">
+            <label for="co-num">上传至D</label>
+            <input type="text" class="form-control" id="device-num" placeholder="填写数字">
+          </div>
+          <div class="form-group">
+            <label for="co-num">co</label>
+            <input type="text" class="form-control" id="co-num" placeholder="填写数字">
+          </div>
+          <div class="form-group">
+            <input id = 'fileupload' name = 'file' type="file" accept=".zip" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+          </div>
+          <button id = "btn-form-upload" type="submit" class="btn btn-default" >上传</button>
+        </form>
         
       </div>
 
@@ -128,7 +127,7 @@
         return xhr;
       }
 }
-  $('#btn-form').click(function(e){
+  $('#btn-form-upload').click(function(e){
     e.preventDefault();
   
     var formdata = new FormData();

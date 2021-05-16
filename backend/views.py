@@ -299,12 +299,13 @@ def upload(request):
         photo_dest = os.path.join(root_path, photo_num)
         xml_dest = os.path.join(xml_path, '{}.xml'.format(photo_num))
         creator.create(photo_src, photo_dest, xml_dest)
+        os.remove(photo_src)
         j+=1
         #num_progress = j/process
         process_get = Process.objects.all().order_by('id').last()
         process_get.process = 50 + int((j*100/process_all_num)/2)
         process_get.save()
-    os.remove(photo_path)
+    
 
     return JsonResponse({'status':True,'msg':'ok'})
 
