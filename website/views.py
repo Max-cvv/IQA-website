@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from website.models import Users, Records, Question ,Tiaomu
+from website.models import Users, Records, Question ,Tiaomu, Devices, Lab
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -10,7 +10,6 @@ from utils.utils import login_decorator
 from utils.utils import compute_rank_scores,extract_pair_data
 # Create your views here.
 
-name = ["小米6","华为畅享7plus","魅族16","华为nova2plus","红米k20pro","iphone11","iphone7","oppoR9s","oppoR9s"]
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
 
 def generateCode(codeLength):
@@ -22,9 +21,17 @@ def generateCode(codeLength):
     return code
 
 def homepage(request):
-    return render(request,'wesite/homepage.html', {'after':0})
+    if Lab.objects.filter(status=1):
+        is_start = 1
+    else:
+        is_start = 0
+    return render(request,'wesite/homepage.html', {'after':0, 'is_start':is_start})
 
 def homepage_after(request):
+    if Lab.objects.filter(status=1):
+        is_start = 1
+    else:
+        is_start = 0
     record_find = Records.objects.all()
     data1 = []
     for record in record_find:
@@ -36,20 +43,22 @@ def homepage_after(request):
         img2 = record.img_num2
         result = record.result
         if img1 == img2 and D1 != 8 and D2 != 8:#and dataGet[1] == 1:
-            
-
             if result == 0:
                 data1.append((D1, D2))
             if result == 1:
                 data1.append((D2, D1))
     data_pair = extract_pair_data(data1)
     ranks = compute_rank_scores(data_pair)
+    name = {}
+    devices = Devices.objects.all()
+    for device in devices:
+        name[device.id] = device.name
     ranklist = []
     i = 0
     for rank in ranks:
-        ranklist.append([name[rank[0]-1], 'style = width:'+str(round(rank[1],2))+'%;'+color[i], str(round(rank[1],2))])
+        ranklist.append([name[rank[0]], 'style = width:'+str(round(rank[1],2))+'%;'+color[i%8], str(round(rank[1],2))])
         i+=1
-    return render(request, 'wesite/homepage.html', {'after':1,'ranks':ranklist})
+    return render(request, 'wesite/homepage.html', {'after':1,'ranks':ranklist, 'is_start':is_start})
 
 
 #homepage
@@ -70,7 +79,13 @@ def hand_form(request):
             code = generateCode(6)
             findUser = Users.objects.filter(check_list=code)
         
-        user = Users(check_list = code, record_now = 1)
+        users = Users.objects.all().order_by("id")
+        i = 1
+        for user_num in users:
+            if i != user_num.id:
+                break
+            i += 1
+        user = Users(id = i, check_list = code, record_now = 1)
         user.save()
         #获得需要评价的总数和具体条目
         #img_index = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26,  29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 51, 53, 54, 55, 56]
@@ -124,11 +139,12 @@ def log_in(request):
     if request.method=='GET':
         return render(request,'wesite/login.html')
     elif request.method=="POST":
+        if not Lab.objects.filter(status=1):
+            context = {'script':"alert", 'wrong':'未在实验开展时间！'}
+            return render(request,'wesite/login.html', context)
         user=request.POST.get('u')
         user_find = Users.objects.filter(check_list = user)
         if user_find:
-            #request.session.set_expiry(10)  #session认证时间为10s，10s之后session认证失效
-            #request.session['username']=user   #user的值发送给session里的username
             user_find = Users.objects.get(check_list = user)
             if user_find.submit_time:
                 context = {'script':"alert", 'wrong':'您已参与！'}

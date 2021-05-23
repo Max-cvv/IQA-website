@@ -4,7 +4,11 @@
 
 {% block title %}管理后台{% endblock %}
 {% block external_header %}
-
+<style type="text/css">
+.col-img:hover{
+    background-color: #428bca10;
+}
+</style>
 {% endblock %}
 {% block body %}
 
@@ -24,11 +28,11 @@
         </ul>
 
         <div class = "container">
-          <div class="row" style="margin-top: 20px;">
+          <div class="row">
           {% for img,index,index_ in imgs %}
           
 
-            <div class = "col-sm-2" style = "text-align: center;">
+            <div class = "col-sm-2 col-img" style = "text-align: center;padding-top: 20px;">
               <a href="/manage/0/full_img/?device={{device_id}}&&co_id={{co_id}}&&img_num={{index_}}">
                 <img src = "{%static ''%}{{img}}">
               </a>
@@ -37,12 +41,13 @@
 
             {% if index  == 1 %}
             </div>
-            <div class="row" style="margin-top: 20px;">
+            <div class="row">
             {% endif %}
           
           
           {% endfor %}
           </div>
+          
         </div>
         {% else%}
         <div>暂无照片</div>
@@ -111,6 +116,7 @@
 {% block external_js %}
 <script>$("#manage_0").addClass("active");$("#device{{device_id}}").addClass("active");$("#{{co_id}}").addClass("active")</script>
 <script>
+  $("#modal-btn").remove();
   var xhrOnProgress=function(fun) {
       xhrOnProgress.onprogress = fun; //绑定监听
       //使用闭包实现监听绑
@@ -134,12 +140,16 @@
     var files = $('#fileupload')[0].files[0];   // 文件list
     var text1 = $('#co-num').val();
     var text2 = $('#device-num').val();
+    if(isNaN(text1) || isNaN(text2)){
+      alert('请填入数字格式！（非零）');
+      return
+    }
     if(!files){
-        alert('请选择文件上传！')
+        alert('请选择文件上传！');
         return
     }
     if(!text1 || !text2){
-        alert('请填写数字！')
+        alert('请填写数字！');
         return
     }
     formdata.append('file',files);

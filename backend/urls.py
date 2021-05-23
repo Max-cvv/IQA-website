@@ -12,12 +12,14 @@ urlpatterns = [
     path('2/', views.manager_records_list, name = 'manager_records_list'),
     path('3/', views.manager_question_list, name = 'manager_question_list'),
     path('4/', views.get_rank, name = 'manager_question_list'),
-
+    path('5/', views.manage_lab, name = 'manager_lab'),
 
     path('0/add_device/', views.device_add),
     path('0/full_img/', views.full_img),
     path('0/upload/', views.upload, name = 'upload'),
     path('0/process/', views.process, name = 'process'),
+
+    path('5/update_status/<lab_id>/', views.lab_status),
 
     path('excel/', views.excel),
 

@@ -16,7 +16,14 @@
     <script type="text/javascript" src="{% static 'js/inc/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/homepage.js' %}"></script>
-    
+    <style>
+      @keyframes highlight {
+  0% {}
+  50% {background-color: rgb(255, 255, 255);}
+  100% {}
+}
+
+    </style>
    
 </head>
 <script>var static_root = "{% static '' %}"</script>
@@ -35,11 +42,11 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="#">Home</a></li>
-            <li><a href="http://gr.xjtu.edu.cn/en/web/xqmou/iqa" target="_blank" >About</a></li>
-            <li><a href="#my-footer">Contact</a></li>
+            <li><a href="http://gr.xjtu.edu.cn/en/web/xqmou/iqa" target="_blank">About</a></li>
+            <li><a href="#my-footer" dest="footer" class="a-for-highlight">Contact</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a  id = "start-btn" href="#start" role="button">Start Now!</a></li>
+            <li><a  id = "start-btn" href="#start" role="button" dest="div3" class="a-for-highlight">Start Now!</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -154,13 +161,14 @@
             </div>
             <div class="col-sm-3">
               <div id = "my-form-wrapper" >
+                <div id = "my-tips" style = "display: none;text-align: center;color: red;">未在实验开展时间内</div>
                 <div id = "my-loading" style = "display: none;text-align: center;"><img src = "{% static '3.gif' %}" style = "height: 100%;max-width: 100%;" ></div>
                 <div id = "my-loading-after" style = "display: none;text-align: center;margin-top: 100px;">
                   <div>您的验证码是：</div>
                   <div id = "my-yanzhengma"></div>
                   <div>复制后点击页面右上角"Start Now"按钮进入实验平台</div>
                 </div>
-                <div id = "my-form" >
+                <div id = "my-form">
                   <div class="form-group">
                     <label>1.您的性别<span class = "label-star">*</span></label> 
                     <div class="radio">
@@ -288,8 +296,22 @@
 
     
     {% include 'modal.html' %}
-
+<script>var is_start = "{{is_start}}"</script>
+<script>
+  $(".footer").on("animationend",function(){
+        $(this).css("animation","");
+    });
+  $(".div3").on("animationend",function(){
+      $(this).css("animation","");
+  });
+  $(".a-for-highlight").click(function(){
+    id = $(this).attr('dest');
+    //alert(id);
+    $("."+id).css("animation", "highlight 2s");
+    
+    
+  });
+</script>
 </body>
 
 </html>
-

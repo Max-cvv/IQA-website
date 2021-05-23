@@ -60,4 +60,5 @@ class Process(models.Model):
     status = models.IntegerField(blank=True,null=True)
 
 class Lab(models.Model):
+    func = models.IntegerField(blank=True,null=True)
     status = models.IntegerField(blank=True,null=True)

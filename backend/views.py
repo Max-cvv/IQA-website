@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from website.models import Users, Records, Managers, Question, Devices, Process
+from website.models import Users, Records, Managers, Question, Devices, Process, Lab
 from django.contrib.auth import logout
 from utils.utils import login_decorator, compute_rank_scores, extract_pair_data, unzip_file, transpose_img
 from io import BytesIO
@@ -14,9 +14,8 @@ from django.core.paginator import Paginator
 
 from django.conf import settings
 STATIC_ROOT = os.path.join(settings.STATIC_ROOT, 'files/photo')
-num_progress = 0
+
 # Create your views here.
-name = ["小米6","华为畅享7plus","魅族16","华为nova2plus","红米k20pro","iphone11","iphone7","oppoR9s","oppoR9s"]
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
 #获得实时排名
 @login_decorator()
@@ -33,18 +32,20 @@ def get_rank(request):
         result = record.result
         result = record.result
         if img1 == img2 and D1 != 8 and D2 != 8:#and dataGet[1] == 1:
-            
-
             if result == 0:
                 data1.append((D1, D2))
             if result == 1:
                 data1.append((D2, D1))
     data_pair = extract_pair_data(data1)
     ranks = compute_rank_scores(data_pair)
+    name = {}
+    devices = Devices.objects.all()
+    for device in devices:
+        name[device.id] = device.name
     ranklist = []
     i = 0
     for rank in ranks:
-        ranklist.append([name[rank[0]-1], 'style = width:'+str(round(rank[1],2))+'%;'+color[i], str(round(rank[1],2))])
+        ranklist.append([name[rank[0]], 'style = width:'+str(round(rank[1],2))+'%;'+color[i%8], str(round(rank[1],2))])
         i+=1
     return render(request, 'backend/manage_rank.html', {'ranks':ranklist})
 
@@ -55,7 +56,7 @@ def excel(request):
     # 创建工作簿
     ws = xlwt.Workbook(encoding='utf-8')
     # 添加第一页数据表
-    w = ws.add_sheet('设备信息') # 新建sheet（sheet的名称为"sheet1"）
+    w = ws.add_sheet('设备信息') # 新建sheet
     # 写入表头
     w.write(0, 0, u'设备id')
     w.write(0, 1, u'手机型号')
@@ -71,7 +72,7 @@ def excel(request):
         i+=1
 
     # 添加第二页数据表
-    w = ws.add_sheet('用户信息') # 新建sheet（sheet的名称为"sheet1"）
+    w = ws.add_sheet('用户信息') # 新建sheet
     # 写入表头
     w.write(0, 0, u'用户id')
     w.write(0, 1, u'屏幕分辨率')
@@ -108,7 +109,7 @@ def excel(request):
         i+=1
 
     # 添加第三页数据表
-    w = ws.add_sheet('操作记录') # 新建sheet（sheet的名称为"sheet1"）
+    w = ws.add_sheet('操作记录') # 新建sheet
     # 写入表头
     w.write(0, 0, u'记录id')
     w.write(0, 1, u'用户id')
@@ -141,8 +142,6 @@ def excel(request):
         i+=1
 
 
-    
-    
     # 写出到IO
     output = BytesIO()
     ws.save(output)
@@ -165,7 +164,7 @@ def manager_login(request):
             #request.session.set_expiry(10)  #session认证时间为10s，10s之后session认证失效
             #request.session['username']=user   #user的值发送给session里的username
             request.session['is_login_manager']=True   #认证为真
-            return redirect(reverse('manager_users_list'))
+            return redirect(reverse('manager_database'))
         else:
             context = {'script':"alert", 'wrong':'用户名或密码错误！！'}
             return render(request,'backend/manager_login.html', context)
@@ -181,26 +180,31 @@ def database(request):
 
     root_device = os.path.join(STATIC_ROOT,"D{}".format(device_id))
     device_content = os.listdir(root_device)
+    device_content.sort(key = lambda x: int(x[2:]))
 
     co_id = request.GET.get('co_id', device_content[0])
     root_co = os.path.join(root_device,co_id)
 
+    photo_list = os.listdir(root_co)
+    if 'xml' in photo_list:
+        photo_list.remove('xml')
+    photo_list.sort(key=lambda x: int(x))
+
     i = 1
     img_path_list = []
+    img_index_tab = []
     img_index = []
-    while True:
-        path_photo = os.path.join(root_co, '{}'.format(i))
-        if os.path.isdir(path_photo):
-            img_path_list.append("files/photo/D{}/{}/{}/7/0_0.jpg".format(device_id, co_id, i))
-            if i%6 == 0:
-                img_index.append(1)
-            else:
-                img_index.append(0)
-            i+=1
+    for photo_item in photo_list:
+        img_path_list.append("files/photo/D{}/{}/{}/7/0_0.jpg".format(device_id, co_id, photo_item))
+        img_index.append(int(photo_item))
+        if i%6 == 0:
+            img_index_tab.append(1)
         else:
-            break
+            img_index_tab.append(0)
+        i+=1
+        
     
-    img_index[-1] = 0
+    img_index_tab[-1] = 0
 
     co_id = request.GET.get('co_id', device_content[0])
     content = {}
@@ -209,7 +213,7 @@ def database(request):
     content['co'] = device_content
     content['device_id'] = device_id
     content['co_id'] = co_id
-    content['imgs'] = zip(img_path_list, img_index, [j for j in range(1,i)])
+    content['imgs'] = zip(img_path_list, img_index_tab, img_index)
 
     return render(request, 'backend/manage_database.html', content)
 
@@ -240,22 +244,20 @@ def upload(request):
     co_num = request.POST.get('co_num','1')
 
     file_path = os.path.join(settings.STATIC_ROOT, 'upload', name)
-    #if not os.path.exists(file_path):               # 文件夹不存在则创建
-    #    os.mkdir(file_path)
+    
 
     process_get = Process.objects.all().order_by('id').last()
     process_get.status = 1
     process_get.save()
 
-    
-    process_all_num = len(list(file.chunks()))
+    #将上传的压缩包写入存储中
+    process_all_num = len(list(file.chunks()))  #用于记录进度
     j = 0
 
     with open(file_path,'wb') as fp:    # 写文件
         for i in file.chunks():
             fp.write(i)
             j+=1
-            #num_progress = j/process
             process_get = Process.objects.all().order_by('id').last()
             process_get.process = int((j*100/process_all_num)/2)
             process_get.save()
@@ -301,7 +303,6 @@ def upload(request):
         creator.create(photo_src, photo_dest, xml_dest)
         os.remove(photo_src)
         j+=1
-        #num_progress = j/process
         process_get = Process.objects.all().order_by('id').last()
         process_get.process = 50 + int((j*100/process_all_num)/2)
         process_get.save()
@@ -309,12 +310,10 @@ def upload(request):
 
     return JsonResponse({'status':True,'msg':'ok'})
 
-
+#处理前端的处理进度请求
 def process(request):
     status = request.GET.get('status', 0)
-    #global num_progress
     if int(status) == 0:
-        num_progress = 0
         process_get = Process(process = 0, status = 0)
         process_get.save()
         return JsonResponse(process_get.process, safe =False)
@@ -381,6 +380,30 @@ def record_delete(request, record_id):
     record_find = Records.objects.get(id = record_id)
     record_find.delete()
     return redirect(reverse('manager_records_list'))
+
+@login_decorator()
+def manage_lab(request):
+    labs = Lab.objects.all()
+    if Lab.objects.filter(status=1):
+        is_start=1
+    else:
+        is_start=0
+    return render(request, 'backend/manage_lab.html', {'labs':labs, 'is_start':is_start})
+
+@login_decorator()
+def lab_status(request, lab_id):
+    lab = Lab.objects.get(id = lab_id)
+    if lab.status == 0:
+        if Lab.objects.filter(status=1):
+            return HttpResponse("错误！")
+        else:
+            lab.status=1
+            lab.save()
+            return redirect(reverse('manager_lab'))
+    else:
+        lab.status=0
+        lab.save()
+        return redirect(reverse('manager_lab'))
 
 
 def manage_logout(request):

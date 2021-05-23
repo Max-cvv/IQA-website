@@ -118,3 +118,15 @@ body {
 .my-col{
   width: 150px;
 }
+
+.btn-sm:hover {
+  text-decoration: none;
+}
+
+.btn-sm:visited {
+  text-decoration: none;
+}
+
+.btn-sm:active {
+  text-decoration: none;
+}

@@ -11,7 +11,7 @@
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
        
         <h1 class="page-header">用户列表</h1>
-        <a href = "/manage/excel/">导出</a>
+        
 <!--    
         <form class="form-inline" method = "GET" action = "/manage/adduser/">
           <div class="form-group">
@@ -28,7 +28,6 @@
             <thead>
               <tr>
                 <th>id</th>
-                <th>姓名</th>
                 <th>邀请码</th>
                 <th>屏幕分辨率</th>
                 <th>窗口大小</th>
@@ -41,14 +40,13 @@
                 {% for user in users_list %}
               <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
                 <td>{{ user.check_list }}</td>
                 <td>{{ user.screen_width}}×{{ user.screen_height}}</td>
                 <td>{{ user.window_width}}×{{ user.window_height}}</td>
                 <td>{{ user.login_time }}</td>
                 <td>{{ user.submit_time }}</td>
                 <td>
-                  <a href="/manage/delete/{{ user.id }}/" class="btn-sm btn-danger" role="button">清空数据</a>
+                  <a dest="/manage/delete/{{ user.id }}/" class="btn-sm btn-danger clear-data" role="button">清空数据</a>
                 </td>
               </tr>
                 {% endfor %}
@@ -64,4 +62,10 @@
 
 {% block external_js %}
 <script>$("#manage_1").addClass("active")</script>
+<script>
+  $(".clear-data").click(function(){
+    var a = $(this).attr("dest")
+    showModal("提示", "确定要删除该用户所有相关信息（问卷、评价记录）吗？", "确认", a);
+  })
+</script>
 {% endblock %}

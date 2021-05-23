@@ -43,7 +43,7 @@
                 <td>{{ record.operation}}</td>
                 <td>{{ record.operation_scroll }}</td>
                 <td>{{ record.submit_time }}</td>
-                <td><a href="/manage/record/delete/{{ record.id }}/" class="btn-sm btn-danger" role="button">删除</a></td>
+                <td><a dest="/manage/record/delete/{{ record.id }}/" class="btn-sm btn-danger clear-data" role="button">删除</a></td>
               </tr>
                 {% endfor %}
             </tbody>
@@ -58,4 +58,10 @@
 
 {% block external_js %}
 <script>$("#manage_2").addClass("active")</script>
+<script>
+  $(".clear-data").click(function(){
+    var a = $(this).attr("dest")
+    showModal("提示", "确定要删除该条记录吗？", "确认", a);
+  })
+</script>
 {% endblock %}

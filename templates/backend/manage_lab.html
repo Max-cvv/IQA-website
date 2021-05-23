@@ -4,43 +4,50 @@
 
 {% block title %}管理后台{% endblock %}
 {% block external_header %}
+<style>
 
+</style>
 {% endblock %}
 {% block body %}
 
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <h1 class="page-header">问卷信息</h1>
+        <h1 class="page-header">实验列表</h1>
 
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>用户id</th>
-                <th>性别</th>
-                <th>年龄</th>
-                <th>是否戴眼镜</th>
-                <th>教育背景</th>
-                <th>拍摄习惯</th>
-                <th>电脑屏幕</th>
+                <th>实验id</th>
+                <th>实验方法</th>
+                <th>状态</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody>
-                {% for qa in qas %}
+                {% for lab in labs %}
               <tr>
-                <td>{{ qa.user_id }}</td>
-
-                
-                <td>{{ qa.gender }}</td>
-                <td>{{ qa.age }}</td>
-                <td>{{ qa.isGlasses }}</td>
-                <td>{{ qa.edu }}</td>
-                <td>{{ qa.pho }}</td>
-                <td>{{ qa.screen }}</td>
+                <td>{{ lab.id }}</td>
+                <td>{{ lab.func }}</td>
+                {% if is_start == 1 %}
+                  {% if lab.status == 1 %}
+                  <td>开展中</td>
+                  <td><a href="/manage/5/update_status/{{ lab.id }}/" class=" btn-sm btn-danger" role="button" >开始/停止</a></td>
+                  {% else %}
+                  <td>无</td>
+                  <td><a href="#" class="btn-sm btn-danger" role="button" onclick="tips()">开始/停止</a></td>
+                  {% endif %}
+                {% else %}
+                <td>无</td>
+                <td><a href="/manage/5/update_status/{{ lab.id }}/" class="btn-sm btn-danger" role="button">开始/停止</a></td>
+                {% endif %}
               </tr>
                 {% endfor %}
             </tbody>
           </table>
         </div>
+        <h1 class="page-header">新建实验</h1>
+
+        <button id = "btn-form-upload"  class="btn btn-default" >上传</button>
       </div>
 
 
@@ -49,5 +56,15 @@
 {% endblock %}
 
 {% block external_js %}
-<script>$("#manage_3").addClass("active")</script>
+<script>$("#manage_5").addClass("active")</script>
+<script>
+  $("#btn-form-upload").click(function(){
+    alert(this.id);
+    //window.location.reload();
+  })
+  function tips(){
+    showModal('提示','只能同时开展一个实验！');
+  }
+  
+</script>
 {% endblock %}
