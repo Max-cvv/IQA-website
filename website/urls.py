@@ -13,6 +13,7 @@ urlpatterns = [
     path('record/',  views.record, name = 'record'),
    
     path('hand_form/', views.hand_form),
+    path('hand_form_last/', views.hand_form_last),
 
     path('creatRecordList/', views.creatRecordList),
 ]

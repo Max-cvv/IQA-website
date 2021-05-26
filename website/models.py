@@ -45,6 +45,7 @@ class Question(models.Model):
     edu = models.IntegerField()
     pho = models.IntegerField()
     screen = models.CharField(max_length=60,blank=True,null=True)
+    options = models.CharField(max_length=60,blank=True,null=True)
 
 class Tiaomu(models.Model):
     img1 = models.IntegerField(blank=True,null=True)

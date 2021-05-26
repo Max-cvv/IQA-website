@@ -9,6 +9,10 @@ var D_1,D_2,CO_1,CO_2;
 var pho1,pho2;
 var test_pho1 = 1,test_pho2= 1;
 
+var img_to_test = 0;
+var img_has_test = 0;
+
+
 //路径
 var root_prefixUrl = static_root + "files/images/";
 var rootpath = static_root + "files/photo/";
@@ -124,18 +128,55 @@ $('#overlay1')
 
 var fade_loading1 = function(){
     $('#overlay').hide();
+    if($("#start-btn").html() == '下一组'){
+        $("#li-nextimg").removeClass("disabled");
+        $("#nextimg").unbind("click");
+        $("#nextimg").click(function(){
+            resetChoice();
+            getRecords_Next();
+            img_has_test+=1;
+        })
+    }
+    $("#start-btn").unbind("click");
+    $("#start-btn").click(function(){
+        img_has_test+=1;
+        clickButton();
+        
+    })
+    
 }
 
 var fade_loading2 = function(){
     $('#overlay1').hide();
+    if($("#start-btn").html() == '下一组'){
+        $("#li-nextimg").removeClass("disabled");
+        $("#nextimg").unbind("click");
+        $("#nextimg").click(function(){
+            resetChoice();
+            getRecords_Next();
+            img_has_test+=1;
+        })
+    }
+    $("#start-btn").unbind("click");
+    $("#start-btn").click(function(){
+        img_has_test+=1;
+        clickButton();
+        
+    })
 }
 
 var show_loading1 = function(){
     $('#overlay').show();
+    $("#li-nextimg").addClass("disabled");
+    $("#nextimg").unbind("click");
+    $("#start-btn").unbind("click");
 }
 
 var show_loading2 = function(){
     $('#overlay1').show();
+    $("#li-nextimg").addClass("disabled");
+    $("#nextimg").unbind("click");
+    $("#start-btn").unbind("click");
 }
 
 
@@ -248,10 +289,7 @@ $("#reset-img").click(function(){
 
 $("#reset-choice").click(resetChoice);
 
-
-
-
-
+$("#btnModal-for-question").click(question);
 
 
 function clickButton(){
@@ -261,8 +299,13 @@ function clickButton(){
         resetChoice();
     }
     else{
-        showModalButton("提示", "您还未做出选择，若不对此组做出评价，点击确定按钮跳转到下一步，否则关闭此窗口");
-        $("#btnModal").click(getRecords_Next);
+        if($("#start-btn").html() == '下一组'){
+            showModalButton("提示", "您还未做出选择，若不对此组做出评价，点击确定按钮跳转到下一步，否则关闭此窗口");
+            $("#btnModal").click(getRecords_Next);
+        }
+        else{
+            getRecords_Next();
+        }
     }
 }
 
@@ -317,7 +360,10 @@ function getRecords_Next(){
                 }
             }
             else{
-                window.location ="/submit_success/";
+                $("#myModal-for-question").modal();
+                //var html_question=''
+                //$("#btnModal").click(function(){window.location ="/submit_success/";});
+                
             }
         },
         error: function(e){
@@ -340,7 +386,7 @@ function getRecords_Next(){
     $("#nextimg").unbind("click");
     
     $("#start-btn").click(function(){
-
+        img_has_test+=1;
         clickButton();
         
     })
@@ -348,7 +394,7 @@ function getRecords_Next(){
     $("#nextimg").click(function(){
         resetChoice();
         getRecords_Next();
-        
+        img_has_test+=1;
     })
 
     resetChoice();
@@ -378,7 +424,8 @@ function getRecords_Next(){
 
                 get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
                 get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
-
+                img_to_test = msg.all;
+                img_has_test = msg.now;
                 $(".progress-bar").css('width', (msg.progress)*100+'%');
                 if(msg.progress == 1){
                     $("#li-nextimg").addClass("disabled");
@@ -391,6 +438,37 @@ function getRecords_Next(){
             alert(e.responseText);
         }
     });
+}
+
+function question(){
+    var options = $("[name = 'optionsRadios']:checked").val();
+    
+    if(options=='option4'){
+        var extra = $("#my-extra").val()
+        if(!extra){$("#my-extra").attr('placeholder', '请填写!');return}
+        options = extra;
+    }
+
+    $.ajax({
+        type:"post",
+        url:"/hand_form_last/",
+        //async : false,
+        data:{"options":options},
+        dataType:"json",
+        success:function(msg){
+            if(msg.state=='fail'){
+                alert("!");
+            }
+            else{
+                window.location ="/submit_success/";
+            }
+        },
+        error: function(e){
+            alert(e.responseText);
+        }
+
+    })
+  
 }
 
 function resetChoice(){
@@ -506,10 +584,10 @@ function sync_tab(){
 }
 
 function showModalButton(header, contain) {
-    $('.modal-title').html(header);
-    $('.modal-body').html(contain);
+    $('#myModalLabel').html(header);
+    $('#myModalBody').html(contain);
     
-    $('.modal-footer').html('<button type="button" id = "btnModal" data-dismiss="modal" class="btn btn-primary">确定</button>');
+    $('#myModalFooter').html('<button type="button" id = "btnModal" data-dismiss="modal" class="btn btn-primary">确定</button>');
     
     $("#myModal").modal();
 }

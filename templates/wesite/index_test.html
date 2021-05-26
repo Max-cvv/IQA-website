@@ -89,6 +89,66 @@
     </div>
 
   {% include 'modal.html' %}
+  <div class="modal" id="myModal-for-question" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel-for-question">您做出选择时主要取决于下列哪个因素？</h4>
+        </div>
+        <div class="modal-body">
+          <div style="width: 200px;margin-left: 200px;">
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked class = "my-radio">
+                颜色、色彩
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" class = "my-radio">
+                清晰度
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3" class = "my-radio">
+                内容、拍摄角度偏差
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios4" value="option4" class = "my-radio">
+                其他
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputEmail3">Email address</label>
+              <input type="text" class="form-control" id="my-extra">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id = "btnModal-for-question" class="btn btn-primary">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  $("#my-extra").attr('disabled','');
+  
+  $(".my-radio").click(function(){
+    if($("[name = 'optionsRadios']:checked").val()=='option4'){
+      $("#my-extra").removeAttr('disabled','');
+    }
+    else{
+      $("#my-extra").attr('disabled','');
+    }
+  })
+  //$("#myModal-for-question").modal();
+  
+  
+</script>
     
 </body>
 

@@ -154,8 +154,6 @@ def hand_form(request):
         #     i = i+1
 
         
-        
-        
         response = JsonResponse({'state':'ok', 'code':code})
         response.set_cookie("user_check_code", code, 60*60*24*7)
 
@@ -164,6 +162,17 @@ def hand_form(request):
         return JsonResponse({'state':'fail'})
 
 
+@csrf_exempt
+def hand_form_last(request):
+    if request.method=='POST':
+        options=request.POST.get('options')
+        user_id = request.session['userID']
+        qa = Question.objects.get(user_id=user_id)
+        qa.options = options[:20]
+        qa.save()
+        logout(request)
+        return JsonResponse({'state':'ok'})
+    return JsonResponse({'state':'fail'})
 
 #用户端
 def log_in(request):
@@ -227,7 +236,7 @@ def creatRecordList(request):
         img1 = record.img_num1
         img2 = record.img_num2
         return JsonResponse({'state':'ok', 'device1':D1, 'device2':D2,'co1':CO1, 'co2':CO2, \
-                'photo_num1':img1, 'photo_num2':img2, 'progress':progress})
+                'photo_num1':img1, 'photo_num2':img2, 'progress':progress, 'now':record_now, 'all':record_all})
     return JsonResponse({'state':'fail'})
 
 
@@ -263,7 +272,6 @@ def record(request):
         else:
             user_find.submit_time=datetime.datetime.now()
             user_find.save()
-            logout(request)
             return JsonResponse({'state':'handSuccess'})
     else:
         return JsonResponse({'state':'fail'})
