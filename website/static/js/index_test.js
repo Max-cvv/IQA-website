@@ -307,7 +307,7 @@ function getRecords_Next(){
                 get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
                 get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
 
-                alert(msg.now);
+                //alert(msg.now);
                 progress = msg.progress;
                 $(".progress-bar").css('width', (msg.progress)*100+'%');
                 if(msg.progress == 1){
