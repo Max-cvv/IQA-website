@@ -40,9 +40,9 @@ def transpose_img(path):
                 img = img.rotate(90, expand=True).transpose(Image.FLIP_LEFT_RIGHT)
             elif orientation == 8:
                 img = img.rotate(90, expand=True)
-    if flag == 1:
-        #print(path)
-        img.save(path, quality=95, exif=exif_bytes)
+        if flag == 1:
+            #print(path)
+            img.save(path, quality=95, exif=exif_bytes)
 
 def unzip_file(src_file, dest_dir):
     with open(src_file, 'rb') as src_file:
