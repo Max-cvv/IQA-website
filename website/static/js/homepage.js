@@ -19,13 +19,32 @@ $(window).scroll(function() {
     scroll();
 });
 
-if(is_start == '0'){
+//判断当前设备
+var userAgentInfo = navigator.userAgent;
+var Agents = ["Android", "iPhone",
+    "SymbianOS", "Windows Phone",
+    "iPad", "iPod"];
+var flag = false;
+for (var v = 0; v < Agents.length; v++) {
+    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+        flag = true;
+        break;
+    }
+}
+
+
+if(flag){
     $("#my-form").hide();
-    $("#my-tips").show(); 
+    $("#my-tips").show();
+    $("#my-tips").html('请在电脑端参与');
+    
+}
+else if(is_start == '0'){
+    $("#my-form").hide();
+    $("#my-tips").show();
+    $("#my-tips").html('未在实验开展时间内');
 }
 else{
-
-
     var cookies = $.cookie('user_check_code');
     if(cookies){
         $("#my-form").hide();

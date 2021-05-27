@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>验证界面</title>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <script src="{% static 'js/inc/jquery-3.5.1.min.js' %}"></script>
     <link href="{% static 'css/login.css' %}" type="text/css" rel="stylesheet"/>
 </head>
 
@@ -16,11 +17,32 @@
             <fieldset>
                 <legend id="word">请输入验证码</legend>
                 <input id="input1" type="text" name="u">
-                <button  class="but" type="submit">确定</button>
+                <button  id = "my-btn" class="but" type="submit">确定</button>
             </fieldset>
         </form>
     </div>
     <script type="text/javascript">{{script}}('{{wrong}}')</script>
+    <script>
+        var userAgentInfo = navigator.userAgent;
+        var Agents = ["Android", "iPhone",
+            "SymbianOS", "Windows Phone",
+            "iPad", "iPod"];
+        var flag = false;
+        for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = true;
+                break;
+            }
+        }
+
+
+        if(flag){
+            $("#my-btn").click(function(e){
+                e.preventDefault();
+                alert("请在电脑端登录！");
+            })
+        }
+    </script>
 </body>
 
 </html>
