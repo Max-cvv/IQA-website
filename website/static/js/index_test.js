@@ -128,52 +128,38 @@ $('#overlay1')
 
 var fade_loading1 = function(){
     $('#overlay').hide();
-    if($("#start-btn").html() == '下一组'){
-        $("#li-nextimg").removeClass("disabled");
-        $("#nextimg").unbind("click");
-        $("#nextimg").click(function(){
-            resetChoice();
-            getRecords_Next();
-            img_has_test+=1;
-        })
-    }
-    $("#start-btn").unbind("click");
-    $("#start-btn").click(function(){
-        img_has_test+=1;
-        clickButton();
-        
-    })
-    
 }
 
 var fade_loading2 = function(){
-    $('#overlay1').hide();
-    if($("#start-btn").html() == '下一组'){
-        $("#li-nextimg").removeClass("disabled");
-        $("#nextimg").unbind("click");
-        $("#nextimg").click(function(){
-            resetChoice();
-            getRecords_Next();
-            img_has_test+=1;
-        })
-    }
-    $("#start-btn").unbind("click");
-    $("#start-btn").click(function(){
-        img_has_test+=1;
-        clickButton();
-        
-    })
+    $('#overlay1').hide(); 
 }
 
 var show_loading1 = function(){
     $('#overlay').show();
-    $("#li-nextimg").addClass("disabled");
-    $("#nextimg").unbind("click");
-    $("#start-btn").unbind("click");
 }
 
 var show_loading2 = function(){
     $('#overlay1').show();
+}
+
+var enable_btn = function(){
+    if($("#start-btn").html() == '下一组'){
+        $("#li-nextimg").removeClass("disabled");
+        $("#nextimg").unbind("click");
+        $("#nextimg").click(function(){
+            resetChoice();
+            getRecords_Next();
+            img_has_test+=1;
+        })
+    }
+    $("#start-btn").unbind("click");
+    $("#start-btn").click(function(){
+        img_has_test+=1;
+        clickButton();
+        
+    })
+}
+var disable_btn = function(){
     $("#li-nextimg").addClass("disabled");
     $("#nextimg").unbind("click");
     $("#start-btn").unbind("click");
@@ -347,9 +333,7 @@ function getRecords_Next(){
                 url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
                 url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
 
-                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
-                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
-
+                
                 //alert(msg.now);
                 progress = msg.progress;
                 $(".progress-bar").css('width', (msg.progress)*100+'%');
@@ -358,12 +342,14 @@ function getRecords_Next(){
                     $("#nextimg").unbind("click");
                     $("#start-btn").html("提交");
                 }
+                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+
             }
             else{
-                $("#myModal-for-question").modal();
-                //var html_question=''
-                //$("#btnModal").click(function(){window.location ="/submit_success/";});
-                
+                $('#overlay1').hide();
+                $('#overlay').hide();
+                $("#myModal-for-question").modal();                
             }
         },
         error: function(e){
@@ -378,25 +364,14 @@ function getRecords_Next(){
 
 
  function initFirstImg(){
+    
+    viewers[0].addHandler( 'tile-drawn', enable_btn);
+    viewers[1].addHandler( 'tile-drawn', enable_btn);
 
+    viewers[0].addHandler( 'close', disable_btn);
+    viewers[1].addHandler( 'close', disable_btn);
     viewers[0].close();
     viewers[1].close();
-    //同步之后再绑定下一步事件
-    $("#start-btn").unbind("click");
-    $("#nextimg").unbind("click");
-    
-    $("#start-btn").click(function(){
-        img_has_test+=1;
-        clickButton();
-        
-    })
-
-    $("#nextimg").click(function(){
-        resetChoice();
-        getRecords_Next();
-        img_has_test+=1;
-    })
-
     resetChoice();
 
 
@@ -420,10 +395,7 @@ function getRecords_Next(){
                 url_xml_1 = rootpath+"D"+D_1+"/co"+CO_1+"/xml/"+pho1+".xml"
                 url_1 = rootpath+"D"+D_1+"/co"+CO_1+"/"+pho1+"/";
                 url_xml_2 = rootpath+"D"+D_2+"/co"+CO_2+"/xml/"+pho2+".xml"
-                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";
-
-                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
-                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
+                url_2 = rootpath+"D"+D_2+"/co"+CO_2+"/"+pho2+"/";    
                 img_to_test = msg.all;
                 img_has_test = msg.now;
                 $(".progress-bar").css('width', (msg.progress)*100+'%');
@@ -432,6 +404,8 @@ function getRecords_Next(){
                     $("#nextimg").unbind("click");
                     $("#start-btn").html("提交");
                 }
+                get_tileSource(tileSources[0],viewers[0], url_xml_1,url_1);
+                get_tileSource(tileSources[1],viewers[1], url_xml_2,url_2);
             }
         },
         error: function(e){
