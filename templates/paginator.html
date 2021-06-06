@@ -1,0 +1,43 @@
+<div style="width: 100%;border-top:1px solid #eee;padding-bottom: 9px;"></div>
+<div>
+    
+    显示第 {{context.start_index}} 到第 {{context.end_index}} 条记录，总共 {{context.count}} 条记录 每页显示
+    <div class="dropup" style="display: inline;">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        {{context.per_page}}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu"style="min-width:20px;" aria-labelledby="dropdownMenu1">
+          <li><a href="?per_page=5">5</a></li>
+          <li><a href="?per_page=10">10</a></li>
+          <li><a href="?per_page=15">15</a></li>
+          <li><a href="?per_page=20">20</a></li>
+        </ul>
+    </div>
+    条记录
+    <div style="float: right;">
+        {% if context.has_previous %}
+        <a href="?per_page = {{context.per_page}}&&page={{context.previous_page_number}}"><span class = "glyphicon glyphicon-chevron-left"></span></a>
+        {% else %}
+        <a class="disabled" style="color: silver;"><span class = "glyphicon glyphicon-chevron-left"></span></a>
+        {% endif %}
+        第
+        <div class="dropup" style="display: inline;">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{context.page_number}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" style="min-width:20px;max-height: 150px; overflow-y: auto;" aria-labelledby="dropdownMenu1">
+            {% for i in context.page_range %}
+                <li><a href="?per_page={{context.per_page}}&&page={{i}}">{{i}}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        页
+        {% if context.has_next %}
+        <a href="?per_page={{context.per_page}}&&page={{context.next_page_number}}"><span class = "glyphicon glyphicon-chevron-right"></span></a>
+        {% else %}
+        <a class="disabled" style="color: silver;"><span class = "glyphicon glyphicon-chevron-right"></span></a>
+        {% endif %}
+    </div>
+</div>

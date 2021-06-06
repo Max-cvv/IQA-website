@@ -15,6 +15,29 @@ from django.core.paginator import Paginator
 from django.conf import settings
 STATIC_ROOT = os.path.join(settings.STATIC_ROOT, 'files/photo')
 
+def get_paginator(data, page_number, per_page_num):
+    context = {}
+    paginator = Paginator(data, per_page_num)
+    page = paginator.get_page(page_number)
+    #context[list_name] = page
+    context['count'] = paginator.count
+    context['num_pages'] = paginator.num_pages
+    context['per_page'] = paginator.per_page
+    context['has_next'] = page.has_next()
+    if context['has_next']:
+        context['next_page_number'] = page.next_page_number()
+    
+    context['has_previous'] = page.has_previous()
+    if context['has_previous']:
+        context['previous_page_number'] = page.previous_page_number()
+    context['start_index'] = page.start_index()
+    context['end_index'] = page.end_index()
+    context['page_range'] = paginator.page_range
+
+    context['page_number'] = page_number
+    
+    return page, context
+
 # Create your views here.
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
 #获得实时排名
@@ -288,7 +311,10 @@ def upload(request):
 
     for photo in photo_list:
         photo_src = os.path.join(photo_path, photo)
-        transpose_img(photo_src)
+        if os.path.splitext(photo)[1] == '.bmp':
+            pass
+        else:
+            transpose_img(photo_src)
         root_path = os.path.join(STATIC_ROOT,"D{}/co{}".format(device_num, co_num))
         
         xml_path = os.path.join(root_path, 'xml')
@@ -325,8 +351,12 @@ def process(request):
 
 @login_decorator()
 def manager_users_list(request):
-    user_find = Users.objects.all()
-    return render(request, 'backend/manage_users_list.html', {'users_list':user_find})
+    user_find = Users.objects.all().order_by('id')
+    page_num = request.GET.get('page', 1)
+    per_page = request.GET.get('per_page', 10)
+    
+    user_find,context  = get_paginator(user_find, page_num, per_page)
+    return render(request, 'backend/manage_users_list.html', {'users_list':user_find, 'context':context})
 
 @login_decorator()
 def manager_question_list(request):
@@ -336,23 +366,29 @@ def manager_question_list(request):
     edu = ['高中及以下', '本科或专科', '研究生', '博士及以上']
     pho = ['经常', '一般', '很少', '几乎没有']
 
-    qas = Question.objects.all()
-    for qs in qas:
+    qas = Question.objects.all().order_by("user_id")
+    page_num = request.GET.get('page', 1)
+    per_page = request.GET.get('per_page', 10)
+    
+    qas_page,context  = get_paginator(qas, page_num, per_page)
+    for qs in qas_page:
         qs.gender = gender[int(qs.gender) -1]
         qs.age = age[int(qs.age) -1]
         qs.isGlasses = isGlasses[int(qs.isGlasses) -1]
         qs.edu = edu[int(qs.edu) -1]
         qs.pho = pho[int(qs.pho) -1]
-    return render(request, 'backend/manage_question_list.html', {'qas':qas})
+    return render(request, 'backend/manage_question_list.html', {'qas':qas_page, 'context':context})
+
 
 
 @login_decorator()
 def manager_records_list(request):
-    record_find = Records.objects.all()#.order_by("user_id")
-    #paginator = Paginator(record_find, 20)
-    #page_num = request.GET.get('page', 1)
-    #record_find_page = paginator.get_page(page_num)
-    return render(request, 'backend/manage_records_list.html', {'records_list':record_find})
+    record_find = Records.objects.all().order_by("user_id")
+    page_num = request.GET.get('page', 1)
+    per_page = request.GET.get('per_page', 10)
+    
+    record_find_page,context  = get_paginator(record_find, page_num, per_page)
+    return render(request, 'backend/manage_records_list.html', {'records_list':record_find_page, 'context':context})
 
 
 
