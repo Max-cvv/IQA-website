@@ -81,14 +81,15 @@ def hand_form(request):
         while findUser:
             code = generateCode(6)
             findUser = Users.objects.filter(check_list=code)
-        
+        '''
         users = Users.objects.all().order_by("id")
         i = 1
         for user_num in users:
             if i != user_num.id:
                 break
             i += 1
-        user = Users(id = i, check_list = code, record_now = 1)
+        '''
+        user = Users(check_list = code, record_now = 1)
         user.save()
         qa = Question(user_id = user.id, age = age, gender = gender, edu = edu, isGlasses = isGlasses, pho = pho, screen = screen[0:30])
         qa.save()
