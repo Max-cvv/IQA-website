@@ -17,7 +17,7 @@
     条记录
     <div style="float: right;">
         {% if context.has_previous %}
-        <a href="?per_page = {{context.per_page}}&&page={{context.previous_page_number}}"><span class = "glyphicon glyphicon-chevron-left"></span></a>
+        <a href="?per_page={{context.per_page}}&&page={{context.previous_page_number}}"><span class = "glyphicon glyphicon-chevron-left"></span></a>
         {% else %}
         <a class="disabled" style="color: silver;"><span class = "glyphicon glyphicon-chevron-left"></span></a>
         {% endif %}

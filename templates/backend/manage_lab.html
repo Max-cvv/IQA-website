@@ -5,21 +5,28 @@
 {% block title %}管理后台{% endblock %}
 {% block external_header %}
 <style>
+.td-info{
+  width: 30%;
+  text-align: right;
+}
+
 
 </style>
 {% endblock %}
 {% block body %}
 
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <h1 class="page-header">实验列表</h1>
+        <h1 class="page-header">实验列表 <a id = "newlab"href = "#" style="font-size: large;" title="新增实验"><span class="glyphicon glyphicon-plus"></span></a></h1>
 
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>实验id</th>
-                <th>实验方法</th>
+                <th>已有参与者</th>
+                <th>有效评价数</th>
                 <th>状态</th>
+
                 <th>操作</th>
               </tr>
             </thead>
@@ -27,27 +34,199 @@
                 {% for lab in labs %}
               <tr>
                 <td>{{ lab.id }}</td>
-                <td>{{ lab.func }}</td>
+                <td>27</td>
+                <td>1200</td>
                 {% if is_start == 1 %}
                   {% if lab.status == 1 %}
                   <td>开展中</td>
-                  <td><a href="/manage/5/update_status/{{ lab.id }}/" class=" btn-sm btn-danger" role="button" >开始/停止</a></td>
+                  <td><a href="/manage/5/update_status/{{ lab.id }}/" class=" btn-sm btn-danger" role="button" >开始/停止</a>
                   {% else %}
                   <td>无</td>
-                  <td><a href="#" class="btn-sm btn-danger" role="button" onclick="tips()">开始/停止</a></td>
+                  <td><a href="#" class="btn-sm btn-danger" role="button" onclick="tips()">开始/停止</a>
                   {% endif %}
                 {% else %}
                 <td>无</td>
-                <td><a href="/manage/5/update_status/{{ lab.id }}/" class="btn-sm btn-danger" role="button">开始/停止</a></td>
+                <td><a href="/manage/5/update_status/{{ lab.id }}/" class="btn-sm btn-danger" role="button">开始/停止</a>
                 {% endif %}
+                <a href="#" class="btn-sm btn-danger" role="button">删除</a>
+              <a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></td>
               </tr>
                 {% endfor %}
+
+                
+              <tr>
+                <td>2</td>
+                <td>27</td>
+                <td>1200</td>
+                
+                  <td>无</td>
+                  <td><a href="#" class="btn-sm btn-danger" role="button" onclick="tips()">开始/停止</a>
+                  
+              
+                
+                <a href="#" class="btn-sm btn-danger" role="button">删除</a>
+              <a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></td>
+              </tr>
+                
             </tbody>
           </table>
         </div>
-        <h1 class="page-header">新建实验</h1>
+        
+        <div class="modal" id="myModal-newlab" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">新增实验</h4>
+              </div>
+              <div class="modal-body">
+                <table class = "table table-bordered">
+            
+                  <tbody>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">评价数量：</td>
+      
+                      <td >
+                        <form class="form-inline">
+                          <div class="form-group">
+                            <label for="exampleInputName2"><a href="#"style="display: inline;"><span class = "glyphicon glyphicon-chevron-left"></span></a></label>
+                            <input type="text" class="form-control" id="exampleInputName2" value="60" style="width: 50px;">
+                            <label for="exampleInputName2"><a href="#"style="display: inline;"><span class = "glyphicon glyphicon-chevron-right"></span></a></label>
+                          </div>
+                        </form>
+                      </td>
+                      
+                    </tr>
+                    
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">比较内容：</td>
+                      <td >
+                        <select class="form-control">
+                          <option>不同设备相同场景</option>
+                          <option>相同设备不同场景</option>
+                        </select>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">设备集：</td>
+      
+                      <td>
+                        
+                        <label class="checkbox-inline" style="margin-left: 10px;">
+                          <input type="checkbox" id="inlineCheckbox1" value="option1"> D1
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox2" value="option2"> D2
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox3" value="option3"> D3
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox1" value="option1"> D4
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox2" value="option2"> D5
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox3" value="option3"> D6
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox1" value="option1"> D7
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox2" value="option2"> D8
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox3" value="option3"> D9
+                        </label>
+                        
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">照片集：</td>
+      
+                      <td>
+                        <label class="checkbox-inline" style="margin-left: 10px;">
+                          <input type="checkbox" id="inlineCheckbox1" value="option1"> CO1
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox2" value="option2"> CO2
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox3" value="option3"> CO3
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox1" value="option1"> CO4
+                        </label>      
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">定时任务：</td>
+      
+                      <td>
+                        
+                          <label class="radio-inline">
+                            <input type="radio" name="gender"  value="1"> 是
+                          </label>
+                          <label class="radio-inline">
+                            <input type="radio" name="gender" value="2"> 否
+                          </label>
+                        
+                      </td>
+                      
+                    </tr>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">起止时间：</td>
+      
+                      <td>
+                        
+                        <div class="dropdown" style="display: inline;">
+                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          0
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" style="min-width:20px;max-height: 150px; overflow-y: auto;" aria-labelledby="dropdownMenu1">
+                          
+                              <li><a href="">{{i}}</a></li>
+                          
+                          </ul>
+                          时
+                        </div>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        <div class="dropdown" style="display: inline;">
+                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          0
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" style="min-width:20px;max-height: 150px; overflow-y: auto;" aria-labelledby="dropdownMenu1">
+                          
+                              <li><a href="">12</a></li>
+                          
+                          </ul>
+                          时
+                      </div>
+                        
+                      </td>
+                      
+                    </tr>
+                   
+                      
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button id = "btn-form-upload" class="btn btn-primary" >确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <button id = "btn-form-upload"  class="btn btn-default" >上传</button>
+        <div class="table-responsive" style="display: flex;justify-content: center;align-items: center;">
+          
+
+        </div>
+       
       </div>
 
 
@@ -59,12 +238,15 @@
 <script>$("#manage_5").addClass("active")</script>
 <script>
   $("#btn-form-upload").click(function(){
-    alert(this.id);
+    //alert(this.id);
     //window.location.reload();
   })
   function tips(){
     showModal('提示','只能同时开展一个实验！');
   }
+  $("#newlab").click(function(){
+    $("#myModal-newlab").modal();
+  })
   
 </script>
 {% endblock %}

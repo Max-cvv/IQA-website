@@ -54,7 +54,8 @@ def get_rank(request):
         img2 = record.img_num2
         result = record.result
         result = record.result
-        if img1 == img2 and D1 != 8 and D2 != 8 and D1 != 9 and D2 != 9:#and dataGet[1] == 1:
+        user_id = record.user_id
+        if img1 == img2 and D1 != 8 and D2 != 8 and D1 != 9 and D2 != 9 and user_id<40:#and dataGet[1] == 1:
             if result == 0:
                 data1.append((D1, D2))
             if result == 1:
