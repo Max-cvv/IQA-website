@@ -120,6 +120,11 @@ def hand_form(request):
         user.record_all = record_all
         user.save()
 
+        for i in range(1,61):
+            record = Records(user_id=user.id,user_record_id = i, device1=10, device2=10, co1 = 7, co2 = 7, img_num1=random.randint(1,10),img_num2=random.randint(1,10))
+            record.save()
+
+        '''
         record_list = []
         for i in range(1,51):
             D1 = random.randint(1,7)
@@ -146,7 +151,7 @@ def hand_form(request):
             record = Records(user_id=user.id,user_record_id = i, device1=record_item[0], device2=record_item[1], co1 = record_item[2], co2 = record_item[2], img_num1=record_item[3],img_num2=record_item[4])
             record.save()
             i+=1
-
+        '''
         #i = 46
         # for couple in tiaomuGet:
         #     record = Records(user_id=user.id,user_record_id = i, device1=6, device2=6, co1 = 1, co2 = 1,img_num1=couple.img1,img_num2=couple.img2)
