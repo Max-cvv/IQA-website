@@ -121,7 +121,11 @@ def hand_form(request):
         user.save()
 
         for i in range(1,61):
-            record = Records(user_id=user.id,user_record_id = i, device1=10, device2=10, co1 = 7, co2 = 7, img_num1=random.randint(1,10),img_num2=random.randint(1,10))
+            D1 = random.randint(1,10)
+            D2 = random.randint(1,10)
+            while D1 ==D2:
+                D2 = random.randint(1,10)
+            record = Records(user_id=user.id,user_record_id = i, device1=10, device2=10, co1 = 8, co2 = 8, img_num1=D1,img_num2=D2)
             record.save()
 
         '''
