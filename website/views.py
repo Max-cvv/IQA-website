@@ -125,7 +125,7 @@ def hand_form(request):
             D2 = random.randint(1,10)
             while D1 ==D2:
                 D2 = random.randint(1,10)
-            record = Records(user_id=user.id,user_record_id = i, device1=10, device2=10, co1 = 11, co2 = 11, img_num1=D1,img_num2=D2)
+            record = Records(user_id=user.id,user_record_id = i, device1=10, device2=10, co1 = 12, co2 = 12, img_num1=D1,img_num2=D2)
             record.save()
 
         '''
