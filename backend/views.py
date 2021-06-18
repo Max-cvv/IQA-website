@@ -425,7 +425,17 @@ def manage_lab(request):
         is_start=1
     else:
         is_start=0
-    return render(request, 'backend/manage_lab.html', {'labs':labs, 'is_start':is_start})
+    devices = Devices.objects.all()#.order_by("user_id")
+    co_list=set()
+    for device in devices:
+        root_device = os.path.join(STATIC_ROOT,"D{}".format(device.id))
+        device_content = os.listdir(root_device)
+        co_list |= set(device_content)
+    co_list = list(co_list)
+    co_list.sort(key = lambda x: int(x[2:]))
+    co_new = [i[2:] for i in co_list]
+
+    return render(request, 'backend/manage_lab.html', {'labs':labs, 'is_start':is_start, 'devices':devices, 'co_list':co_new})
 
 @login_decorator()
 def lab_status(request, lab_id):
@@ -441,7 +451,65 @@ def lab_status(request, lab_id):
         lab.status=0
         lab.save()
         return redirect(reverse('manager_lab'))
+@login_decorator()
+def lab_delete(request, lab_id):
+    lab = Lab.objects.get(id = lab_id)
+    lab.delete()
+    return redirect(reverse('manager_lab'))
 
+@csrf_exempt
+def get_co_list(request):
+    devices = request.GET.get('devices')
+    
+    if devices:
+        devices = devices.split(',')
+        root_device = os.path.join(STATIC_ROOT,"D{}".format(devices[0]))
+        device_content = os.listdir(root_device)
+        co_list=set(device_content)
+        for device in devices:
+            root_device = os.path.join(STATIC_ROOT,"D{}".format(device))
+            device_content = os.listdir(root_device)
+            co_list &= set(device_content)
+
+
+        co_list = list(co_list)
+        co_list.sort(key = lambda x: int(x[2:]))
+        co_new = [i[2:] for i in co_list]
+        return JsonResponse({'co_new':co_new})
+    else:
+        return JsonResponse({'co_new':None})
+@csrf_exempt
+def new_lab(request):
+    num = request.POST.get('num')
+    devices = request.POST.get('devices')
+    co_list = request.POST.get('co_list')
+    func = request.POST.get('func')
+    time = request.POST.get('time')
+    time_start = request.POST.get('time_start')
+    time_stop = request.POST.get('time_stop')
+    
+    lab = Lab(status=0,func=int(func), num=num,user_num=0,record_num=0,devices=devices,collections=co_list)
+
+    if int(time)==1:
+        lab.time_plan='{},{}'.format(time_start,time_stop)
+
+    lab.save()
+
+    
+    return JsonResponse({'status':'ok'})
+@csrf_exempt
+def lab_info(request):
+    lab_id = request.GET.get('lab_num')
+    
+    lab = Lab.objects.get(id = lab_id)
+
+    if lab.time_plan:
+        time = lab.time_plan.split(',')
+        time_plan = '{}时-{}时'.format(time[0],time[1])
+    else:
+        time_plan = lab.time_plan
+    
+    return JsonResponse({'status':'ok','num':lab.num,'devices':lab.devices,'co':lab.collections,'func':lab.func,'time':time_plan})
 
 def manage_logout(request):
     #request.session.clear()

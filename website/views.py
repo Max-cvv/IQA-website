@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from website.models import Users, Records, Question ,Tiaomu, Devices, Lab
+from website.models import Users, Records, Question ,Devices, Lab
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -11,7 +11,7 @@ from utils.utils import login_decorator
 from utils.utils import compute_rank_scores,extract_pair_data
 # Create your views here.
 from django.conf import settings
-STATIC_ROOT = os.path.join(settings.STATIC_ROOT, 'upload')
+STATIC_ROOT = os.path.join(settings.STATIC_ROOT, 'files/photo')
 
 color = ["background-color:#8c4646;","background-color:#588c7e;","background-color:#acbc8a;","background-color:#ecd189;","background-color:#e99469;","background-color:#db6b5c;","background-color:#babca2;","background-color:#f9d49c;"]
 
@@ -24,17 +24,29 @@ def generateCode(codeLength):
     return code
 
 def homepage(request):
+    is_start = 0
     if Lab.objects.filter(status=1):
-        is_start = 1
-    else:
-        is_start = 0
+        lab = Lab.objects.get(status=1)
+        if not lab.time_plan:
+            is_start = 1
+        else:
+            hour_now = datetime.datetime.now().hour
+            hour_plan = lab.time_plan.split(',')
+            if hour_now>=int(hour_plan[0]) and hour_now<int(hour_plan[1]):
+                is_start = 1   
     return render(request,'wesite/homepage.html', {'after':0, 'is_start':is_start})
 
 def homepage_after(request):
+    is_start = 0
     if Lab.objects.filter(status=1):
-        is_start = 1
-    else:
-        is_start = 0
+        lab = Lab.objects.get(status=1)
+        if not lab.time_plan:
+            is_start = 1
+        else:
+            hour_now = datetime.datetime.now().hour
+            hour_plan = lab.time_plan.split(',')
+            if hour_now>=int(hour_plan[0]) and hour_now<int(hour_plan[1]):
+                is_start = 1
     record_find = Records.objects.all()
     data1 = []
     for record in record_find:
@@ -45,7 +57,8 @@ def homepage_after(request):
         img1 = record.img_num1
         img2 = record.img_num2
         result = record.result
-        if img1 == img2 and D1 != 8 and D2 != 8 and D1 != 9 and D2 != 9:#and dataGet[1] == 1:
+        user_id = record.user_id
+        if img1 == img2 and D1 != 8 and D2 != 8 and D1 != 9 and D2 != 9 and user_id<40:#and dataGet[1] == 1:
             if result == 0:
                 data1.append((D1, D2))
             if result == 1:
@@ -103,6 +116,39 @@ def hand_form(request):
         #nightImg = [107,108,109,110,111,112,113,116,117,119,122,124,125,126,127,128,129,130,131,132,133,134,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,153,154,155,156,158,160,161]
         #random.shuffle(nightImg)
 
+        lab = Lab.objects.get(status=1)
+        record_all = lab.num
+        user.record_all = record_all
+        user.save()
+        device = lab.devices.split(',')
+        co_list = lab.collections.split(',')
+        photo_list_all=[]
+        root_device = os.path.join(STATIC_ROOT,"D{}".format(device[0]))
+        
+        for co in co_list:
+
+            root_co = os.path.join(root_device,'co{}'.format(co))
+
+            photo_list = os.listdir(root_co)
+            if 'xml' in photo_list:
+                photo_list.remove('xml')
+            photo_list.sort(key=lambda x: int(x))
+            photo_list_all.append(photo_list)
+
+
+        if lab.func ==1:
+            for i in range(record_all):
+                aa=random.choice(photo_list_all)
+                img = random.choice(aa)
+                D1 = int(random.choice(device))
+                D2 = int(random.choice(device))
+                while D1==D2:
+                    D2 = int(random.choice(device))
+                record = Records(user_id=user.id,user_record_id = i+1, device1=D1, device2=D2, co1 = int(co_list[photo_list_all.index(aa)]), co2 = int(co_list[photo_list_all.index(aa)]), img_num1=int(img),img_num2=int(img))
+                record.save()
+        else:
+            pass
+        '''
         lab_co2 = [i for i in range(11,61)]
         lab_co4 = [i for i in range(5,55)]
         #group_id = user.id % len(group)
@@ -127,7 +173,7 @@ def hand_form(request):
                 D2 = random.randint(1,10)
             record = Records(user_id=user.id,user_record_id = i, device1=10, device2=10, co1 = 7, co2 = 7, img_num1=D1,img_num2=D2)
             record.save()
-
+        '''
         '''
         record_list = []
         for i in range(1,51):
@@ -190,7 +236,17 @@ def log_in(request):
     if request.method=='GET':
         return render(request,'wesite/login.html')
     elif request.method=="POST":
-        if not Lab.objects.filter(status=1):
+        is_start = 0
+        if Lab.objects.filter(status=1):
+            lab = Lab.objects.get(status=1)
+            if not lab.time_plan:
+                is_start = 1
+            else:
+                hour_now = datetime.datetime.now().hour
+                hour_plan = lab.time_plan.split(',')
+                if hour_now>=int(hour_plan[0]) and hour_now<int(hour_plan[1]):
+                    is_start = 1
+        if is_start==0:
             context = {'script':"alert", 'wrong':'未在实验开展时间！'}
             return render(request,'wesite/login.html', context)
         user=request.POST.get('u')
@@ -201,10 +257,19 @@ def log_in(request):
                 context = {'script':"alert", 'wrong':'您已参与！'}
                 return render(request,'wesite/login.html', context)
             else:
-                user_find.login_time = datetime.datetime.now()
-                user_find.save()
-                request.session['is_login']=True   #认证为真
-                request.session['userID']=user_find.id
+                if user_find.login_time:
+                    pass
+                else:
+                    user_find.login_time = datetime.datetime.now()
+                    user_find.save()
+                    request.session['is_login']=True   #认证为真
+                    request.session['userID']=user_find.id
+                    lab = Lab.objects.get(status=1)
+                    if lab.user_num:
+                        lab.user_num+=1
+                    else:
+                        lab.user_num=1
+                    lab.save()
                 return redirect(reverse('index'))
         else:
             context = {'script':"alert", 'wrong':'未找到！'}
@@ -267,6 +332,12 @@ def record(request):
         record.operation_scroll = request.POST.get('operation_scroll')
         record.submit_time = datetime.datetime.now()
         record.save()
+        lab = Lab.objects.get(status=1)
+        if lab.record_num:
+            lab.record_num+=1
+        else:
+            lab.record_num=1
+        lab.save()
 
         if record_next <= record_all:
             record = Records.objects.get(user_id=user_id, user_record_id = record_next)

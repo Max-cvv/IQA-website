@@ -11,19 +11,37 @@ var test_pho1 = 1,test_pho2= 1;
 
 var img_to_test = 0;
 var img_has_test = 0;
-
+var img_num = 2;
 
 //路径
 var root_prefixUrl = static_root + "files/images/";
 var rootpath = static_root + "files/photo/";
+$(window).resize(function() {
+    resize_window();
+    loading_height = $('#img1').height();
+    loading_innerWidth = $('#img1').innerWidth();
+    $('#overlay')
+    .css({
+    'top': loading_height/2-50,
+    'left': (loading_innerWidth)/2-75,
+    });
+    $('#overlay1')     
+        .css({     
+        'top': loading_height/2-50,
+        'left': (loading_innerWidth)/2-75,
+        });
+});
 
 //调整图片大小位置
-var img_num = 2;
-var col_num = 2;
-var navHeight = 61;
-$("#row1").height(($("#row1").width()-col_num*30)/((4*col_num)/3));
-padding_main = ((window.innerHeight - navHeight)/2 + navHeight) - $("#row1").height()/2;
-$(".main").css("padding-top", padding_main);
+function resize_window(){
+    var col_num = 2;
+    var navHeight = 61;
+    $("#row1").height(($("#row1").width()-col_num*30)/((4*col_num)/3));
+    padding_main = ((window.innerHeight - navHeight)/2 + navHeight) - $("#row1").height()/2;
+    $(".main").css("padding-top", padding_main);
+}
+
+resize_window();
 
 
 //配置显示图片

@@ -1,3 +1,4 @@
+from typing import Collection
 from django.db import models
 
 # Create your models here.
@@ -63,3 +64,9 @@ class Process(models.Model):
 class Lab(models.Model):
     func = models.IntegerField(blank=True,null=True)
     status = models.IntegerField(blank=True,null=True)
+    num = models.IntegerField(blank=True,null=True)
+    user_num = models.IntegerField(blank=True,null=True)
+    record_num = models.IntegerField(blank=True,null=True)
+    devices = models.CharField(max_length=30,blank=True,null=True)
+    collections = models.CharField(max_length=30,blank=True,null=True)
+    time_plan = models.CharField(max_length=30,blank=True,null=True)

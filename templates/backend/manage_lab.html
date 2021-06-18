@@ -34,8 +34,8 @@
                 {% for lab in labs %}
               <tr>
                 <td>{{ lab.id }}</td>
-                <td>37</td>
-                <td>2220</td>
+                <td>{{ lab.user_num }}</td>
+                <td>{{ lab.record_num }}</td>
                 {% if is_start == 1 %}
                   {% if lab.status == 1 %}
                   <td>开展中</td>
@@ -48,26 +48,10 @@
                 <td>无</td>
                 <td><a href="/manage/5/update_status/{{ lab.id }}/" class="btn-sm btn-danger" role="button">开始/停止</a>
                 {% endif %}
-                <a href="#" class="btn-sm btn-danger" role="button">删除</a>
-              <a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></td>
+                <a href="/manage/5/delete/{{ lab.id }}/" class="btn-sm btn-danger" role="button">删除</a>
+              <a href="#" class = "lab-info" dest={{lab.id}}><span class="glyphicon glyphicon-question-sign"></span></a></td>
               </tr>
                 {% endfor %}
-
-                
-              <tr>
-                <td>2</td>
-                <td>28</td>
-                <td>1680</td>
-                
-                  <td>无</td>
-                  <td><a href="#" class="btn-sm btn-danger" role="button" onclick="tips()">开始/停止</a>
-                  
-              
-                
-                <a href="#" class="btn-sm btn-danger" role="button">删除</a>
-              <a href="#"><span class="glyphicon glyphicon-question-sign"></span></a></td>
-              </tr>
-                
             </tbody>
           </table>
         </div>
@@ -89,9 +73,9 @@
                       <td >
                         <form class="form-inline">
                           <div class="form-group">
-                            <label for="exampleInputName2"><a href="#"style="display: inline;"><span class = "glyphicon glyphicon-chevron-left"></span></a></label>
-                            <input type="text" class="form-control" id="exampleInputName2" value="60" style="width: 50px;">
-                            <label for="exampleInputName2"><a href="#"style="display: inline;"><span class = "glyphicon glyphicon-chevron-right"></span></a></label>
+                            <label for="exampleInputName2"><a href="#" id = "num1" style="display: inline;"><span class = "glyphicon glyphicon-chevron-left"></span></a></label>
+                            <input type="text" class="form-control" id="new-num" value="60" style="width: 50px;">
+                            <label for="exampleInputName2"><a href="#" id = "num2" style="display: inline;"><span class = "glyphicon glyphicon-chevron-right"></span></a></label>
                           </div>
                         </form>
                       </td>
@@ -101,9 +85,9 @@
                     <tr>
                       <td class = "td-info" style="vertical-align:middle;">比较内容：</td>
                       <td >
-                        <select class="form-control">
-                          <option>不同设备相同场景</option>
-                          <option>相同设备不同场景</option>
+                        <select id="lab-func" class="form-control">
+                          <option value="1">不同设备相同场景</option>
+                          <option value="2">相同设备不同场景</option>
                         </select>
                       </td>
                     </tr>
@@ -112,53 +96,23 @@
                       <td class = "td-info" style="vertical-align:middle;">设备集：</td>
       
                       <td>
-                        
+                        {% for device in devices %}
                         <label class="checkbox-inline" style="margin-left: 10px;">
-                          <input type="checkbox" id="inlineCheckbox1" value="option1"> D1
+                          <input class= "devices-check"type="checkbox" name="devices" value={{device.id}}>D{{device.id}}
                         </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox2" value="option2"> D2
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox3" value="option3"> D3
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox1" value="option1"> D4
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox2" value="option2"> D5
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox3" value="option3"> D6
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox1" value="option1"> D7
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox2" value="option2"> D8
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox3" value="option3"> D9
-                        </label>
+                        {% endfor %}
                         
                       </td>
                     </tr>
                     <tr>
                       <td class = "td-info" style="vertical-align:middle;">照片集：</td>
       
-                      <td>
-                        <label class="checkbox-inline" style="margin-left: 10px;">
-                          <input type="checkbox" id="inlineCheckbox1" value="option1"> CO1
+                      <td id="co-td">
+                        {% for co in co_list %}
+                        <label class="checkbox-inline" id="co{{co}}" style="margin-left: 10px;display: none;">
+                          <input type="checkbox" name="co-list"  value={{co}}>CO{{co}}
                         </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox2" value="option2"> CO2
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox3" value="option3"> CO3
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox1" value="option1"> CO4
-                        </label>      
+                        {% endfor %}
                       </td>
                     </tr>
                     <tr>
@@ -167,10 +121,10 @@
                       <td>
                         
                           <label class="radio-inline">
-                            <input type="radio" name="gender"  value="1"> 是
+                            <input type="radio" name="time"  value="1"> 是
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="gender" value="2"> 否
+                            <input type="radio" name="time" value="0"> 否
                           </label>
                         
                       </td>
@@ -181,42 +135,93 @@
       
                       <td>
                         
-                        <div class="dropdown" style="display: inline;">
-                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                          0
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" style="min-width:20px;max-height: 150px; overflow-y: auto;" aria-labelledby="dropdownMenu1">
-                          
-                              <li><a href="">{{i}}</a></li>
-                          
-                          </ul>
-                          时
-                        </div>
+                        <select id="time-start" class="form-control" style="width: 65px;display: inline;">
+                          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                          <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                          <option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option>
+                          <option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option>
+                        </select>
+                        时
                         <span class="glyphicon glyphicon-arrow-right"></span>
-                        <div class="dropdown" style="display: inline;">
-                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                          0
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" style="min-width:20px;max-height: 150px; overflow-y: auto;" aria-labelledby="dropdownMenu1">
-                          
-                              <li><a href="">12</a></li>
-                          
-                          </ul>
-                          时
-                      </div>
-                        
-                      </td>
-                      
-                    </tr>
-                   
-                      
+                        <select id="time-stop" class="form-control" style="width: 65px;display: inline;">
+                          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                          <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                          <option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option>
+                          <option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option>
+                        </select>
+                        时
+                      </td>  
+                    </tr>   
                   </tbody>
                 </table>
               </div>
               <div class="modal-footer">
-                <button id = "btn-form-upload" class="btn btn-primary" >确定</button>
+                <button id = "btn-form-newlab" class="btn btn-primary" >确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal" id="myModal-lab-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">实验信息</h4>
+              </div>
+              <div class="modal-body">
+                <table class = "table table-bordered">
+            
+                  <tbody>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">评价数量：</td>
+      
+                      <td id ="info-1">
+                        
+                      </td>
+                      
+                    </tr>
+                    
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">比较内容：</td>
+                      <td id ="info-2">
+                        
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">设备集：</td>
+      
+                      <td id ="info-3">
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">照片集：</td>
+      
+                      <td id ="info-4">
+        
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">定时任务：</td>
+      
+                      <td id ="info-5">
+                                                
+                      </td>
+                      
+                    </tr>
+                    <tr>
+                      <td class = "td-info" style="vertical-align:middle;">起止时间：</td>
+      
+                      <td id ="info-6">
+                        
+                      </td>  
+                    </tr>   
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
               </div>
             </div>
           </div>
@@ -237,15 +242,152 @@
 {% block external_js %}
 <script>$("#manage_5").addClass("active")</script>
 <script>
-  $("#btn-form-upload").click(function(){
-    //alert(this.id);
-    //window.location.reload();
-  })
+ 
   function tips(){
     showModal('提示','只能同时开展一个实验！');
   }
   $("#newlab").click(function(){
     $("#myModal-newlab").modal();
+  })
+  $("#num1").click(function(){
+    var num_now = parseInt($("#new-num").val());
+    if(num_now>0){
+      $("#new-num").val(num_now-1);
+    }
+  })
+  $("#num2").click(function(){
+    var num_now = parseInt($("#new-num").val());
+    $("#new-num").val(num_now+1);
+  })
+  $(".devices-check").change(function() {
+    var devices = $("input:checkbox[name='devices']:checked").map(function(index,elem) {
+            return $(elem).val();
+        }).get().join(',');
+    $.ajax({
+        type:"get",
+        url:"/manage/5/get_co_list/",
+        //async : false,
+        data:{"devices":devices},
+        dataType:"json",
+        success:function(msg){
+            if(msg.state=='fail'){
+                alert("!");
+            }
+            else{
+              $("#co-td").children().each(function(item){
+                $(this).css('display','none');
+              });
+              if(msg.co_new){
+                msg.co_new.forEach(function(item){
+                //alert(item);
+                var id = "#co"+item;
+                
+                //alert(id);
+                $(id).css('display','inline-block');
+              });
+              }
+            }
+        },
+        error: function(e){
+            alert(e.responseText);
+        }
+
+    })
+});
+
+  
+</script>
+<script>
+   $("#btn-form-newlab").click(function(){
+    var num = $("#new-num").val();
+    var func = $("#lab-func option:selected").val();
+    var time = $("[name = 'time']:checked").val();
+    var time_start = $("#time-start option:selected").val();
+    var time_stop = $("#time-stop option:selected").val();
+    var devices = $("input:checkbox[name='devices']:checked").map(function(index,elem) {
+            return $(elem).val();
+        }).get().join(',');
+    var co_list = $("input:checkbox[name='co-list']:checked").map(function(index,elem) {
+        return $(elem).val();
+    }).get().join(',');
+
+    
+    if(num && func && time  && devices && co_list){
+        if(time==1){
+          if(parseInt(time_start)>=parseInt(time_stop)){
+            alert("起止时间输入有误！");
+            return
+          }
+        }
+            
+        $.ajax({
+            type:"post",
+            url:"/manage/5/new_lab/",
+            //async : false,
+            data:{"num":num, "func":func, "time":time, "time_start":time_start, "time_stop":time_stop, "devices":devices,"co_list":co_list},
+            dataType:"json",
+            success:function(msg){
+                if(msg.state=='fail'){
+                    alert("!");
+                }
+                else{
+                  window.location.reload();
+                }
+            },
+            error: function(e){
+                alert(e.responseText);
+            }
+
+        })
+        
+    }
+    else{
+        alert("请将必填项填写完整");
+    }
+    
+  })
+  
+</script>
+<script>
+  $(".lab-info").click(function(){
+    var a = $(this).attr("dest");
+    $.ajax({
+            type:"get",
+            url:"/manage/5/lab_info/",
+            //async : false,
+            data:{"lab_num":a},
+            dataType:"json",
+            success:function(msg){
+                if(msg.state=='fail'){
+                    alert("!");
+                }
+                else{
+                  $("#info-1").html(msg.num);
+                  if(msg.func==1)
+                  {
+                    $("#info-2").html('不同设备相同场景');
+                  }
+                  else{
+                    $("#info-2").html('相同设备不同场景');
+                  }
+                  $("#info-3").html(msg.devices);
+                  $("#info-4").html(msg.co);
+                  if(msg.time)
+                  {
+                    $("#info-5").html('是');
+                    $("#info-6").html(msg.time);
+                  }
+                  else{
+                    $("#info-5").html('否');
+                  }
+                  $("#myModal-lab-info").modal();
+                }
+            },
+            error: function(e){
+                alert(e.responseText);
+            }
+
+        })
   })
   
 </script>

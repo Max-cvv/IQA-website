@@ -20,6 +20,10 @@ urlpatterns = [
     path('0/process/', views.process, name = 'process'),
 
     path('5/update_status/<lab_id>/', views.lab_status),
+    path('5/delete/<lab_id>/', views.lab_delete),
+    path('5/get_co_list/', views.get_co_list),
+    path('5/new_lab/', views.new_lab),
+    path('5/lab_info/', views.lab_info),
 
     path('excel/', views.excel),
 
