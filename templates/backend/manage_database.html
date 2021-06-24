@@ -73,8 +73,7 @@
               <tr>
                 <th>设备id</th>
                 <th>型号</th>
-                <th>分辨率</th>
-                <th>操作</th>
+                <th>分辨率</th>   
               </tr>
             </thead>
             <tbody>
@@ -85,9 +84,6 @@
                 
                 <td>{{ device.name }}</td>
                 <td>{{ device.resolution }}</td>
-                <td>
-                  <a dest="/manage/delete/{{ user.id }}/" class="btn-sm btn-danger clear-data" role="button">删除</a>
-                </td>
               </tr>
                 {% endfor %}
             </tbody>

@@ -202,9 +202,17 @@ def database(request):
         return render(request, 'backend/manage_database.html', {'is_device':0})
     device_id = request.GET.get('device', 1)
 
+
     root_device = os.path.join(STATIC_ROOT,"D{}".format(device_id))
     device_content = os.listdir(root_device)
     device_content.sort(key = lambda x: int(x[2:]))
+    if not device_content:
+        content = {}
+        content['is_device'] = 1
+        content['devices'] = devices
+        content['device_id'] = device_id
+        return render(request, 'backend/manage_database.html', content)
+
 
     co_id = request.GET.get('co_id', device_content[0])
     root_co = os.path.join(root_device,co_id)
@@ -245,6 +253,10 @@ def database(request):
 def device_add(request):
     devices = Devices(name = request.GET.get('name'), resolution = request.GET.get('resolution'))
     devices.save()
+    root_device = os.path.join(STATIC_ROOT,"D{}".format(devices.id))
+    isExists = os.path.exists(root_device)
+    if not isExists:
+        os.makedirs(root_device)
     return redirect(reverse('manager_database'))
 
 @login_decorator()

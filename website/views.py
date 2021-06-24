@@ -147,7 +147,15 @@ def hand_form(request):
                 record = Records(user_id=user.id,user_record_id = i+1, device1=D1, device2=D2, co1 = int(co_list[photo_list_all.index(aa)]), co2 = int(co_list[photo_list_all.index(aa)]), img_num1=int(img),img_num2=int(img))
                 record.save()
         else:
-            pass
+            for i in range(record_all):
+                device_rand=random.choice(device)
+                aa=random.choice(photo_list_all)
+                img1 = random.choice(aa)
+                img2 = random.choice(aa)
+                while img1==img2:
+                    img2 = random.choice(aa)
+                record = Records(user_id=user.id,user_record_id = i+1, device1=device_rand, device2=device_rand, co1 = int(co_list[photo_list_all.index(aa)]), co2 = int(co_list[photo_list_all.index(aa)]), img_num1=img1,img_num2=img2)
+                record.save()
         '''
         lab_co2 = [i for i in range(11,61)]
         lab_co4 = [i for i in range(5,55)]
