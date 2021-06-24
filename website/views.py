@@ -287,7 +287,7 @@ def log_in(request):
 
 @login_decorator('is_login', 'homepage')
 def index(request):
-    return render(request, 'wesite/index_test.html')
+    return render(request, 'wesite/main.html')
 
 
 @csrf_exempt
