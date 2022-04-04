@@ -1,5 +1,5 @@
 # 图像主观质量评价网站
-django-web项目，用于两两比较的图像质量主观评价
+用于两两比较图像质量主观评价django-web项目
 
 ## 环境配置
 1. 安装requirements.txt中的依赖项，项目中使用python3.6.9
