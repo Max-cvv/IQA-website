@@ -14,3 +14,20 @@
     + 数据库：查看照片、增加设备、上传照片。对于上传照片，把照片（推荐为jpg格式）按顺序编号（1.jpg、2.jpg...），并将照片打包为zip压缩包，压缩包主目录下即为照片
     + 实验信息查看（用户列表、操作记录、问卷信息、实时排名）：查看一些主观评测的数据
     + 实验管理：自定义实验评测开始停止、评测内容、评测数量等
+## 网站界面
+
+1. 主页
+
+   ![image-20220404161043837](https://cdn.jsdelivr.net/gh/Max-cvv/imagehosting/img/image-20220404161043837.png)
+
+2. 实验界面
+
+   ![image-20220404162053194](https://cdn.jsdelivr.net/gh/Max-cvv/imagehosting/img/image-20220404162053194.png)
+
+3. 管理界面
+
+   ![image-20220404161701745](https://cdn.jsdelivr.net/gh/Max-cvv/imagehosting/img/image-20220404161701745.png)
+
+4. 部署在服务器上的网址
+
+   [网站](http://39.97.96.45/)，服务器2022.5.4到期
